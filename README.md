@@ -8,8 +8,10 @@ There are several ways to install node.js
 
  **1. Ubuntu Packages**
 Not recommended at all because Ubuntu sucks at keeping their packages updated.
+
  **2. NodeSource Repository**
  Very Recommended, Easy to install and Quickly updated.
+ 
  **3. NVM (Node Version Manager)**
 Used if you are going to install multiple node versions on your machine.
 
