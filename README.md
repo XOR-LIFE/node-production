@@ -58,33 +58,58 @@ pm2 -v
 ** How to:- **
 
 **Start and Daemonize any application:**
-`pm2 start app.js`
+
+`
+pm2 start app.js
+`
 
 **Stop any application:**
-`pm2 stop app`
+
+`
+pm2 stop app
+`
 
 **Make pm2 auto-boot at server restart:**
-`pm2 startup`
+
+`
+pm2 startup
+`
 
 **List applications:**
-`pm2 list`
+
+`
+pm2 list
+`
 
 **Reload your app with 0-second-downtime:**
-`pm2 reload app`
+
+`
+pm2 reload app
+`
 
 ### **As Node.js is monothreaded, PM2 can duplicate the processes to use all the cores for your CPUs.**
 
 ![](https://pm2.io/_nuxt/img/1f13170.png)
 
 **Start and load balance 4 instances of app.js:**
-`pm2 start app.js -i 4`
+
+`
+pm2 start app.js -i 4
+`
 
 **Or load balance the maximum:**
-`pm2 start app.js -i max`
+
+`
+pm2 start app.js -i max
+`
 
 **Monitor in production:**
-`pm2 monitor`
+
+`
+pm2 monitor
+`
 
 
 **PM2 Documentation:
+
 https://pm2.io/doc/en/runtime/overview/**
