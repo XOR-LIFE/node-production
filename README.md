@@ -34,7 +34,7 @@ sudo apt-get install -y nodejs
 
 Above command will install node.js version 12, if you want a previous version just replace 12 with desired node version e.g. (11, 10, 8)
 
-This will install both node.js  and npm, to check their version simple use.
+This will install both node.js  and npm, to check their versions simply use.
 ```
 node -v
 npm -v
@@ -46,16 +46,16 @@ npm -v
 
 The main feature of PM2 is to start your node.js app if your node app suffered any crash or if your VPS suffered an unexpected shutdown and restarted, therefore, you won't have to worry about manually starting your node app again.
 
-Additionally, PM2 is more than that. It's capable of running several node apps at the same time with independent management for each one of them, Also it allows you to duplicates the processes to use all the cores for your CPUs (as you know that node.js is monothreaded).
+Additionally, PM2 is more than that. It's capable of running several node apps at the same time with independent management for each one of them, Also it allows you to duplicate the processes to use all the cores of your CPUs (as you know that node.js is monothreaded).
 
-**Install PM2**
+### Install PM2
 ```
 sudo npm install -g pm2
 pm2 completion install
 pm2 -v
 ```
 
-** How to:- **
+### How to:-
 
 **Start and Daemonize any application:**
 `pm2 start app.js`
