@@ -246,6 +246,6 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 <br>
 
-## 2- Install MongoDB
+## 3- Install MongoDB
 
 
