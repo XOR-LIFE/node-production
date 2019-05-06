@@ -4,6 +4,8 @@
 The following instructions are based on **Ubuntu**, the steps are the same for whatever Linux distribution you are going to use but the commands might be different.
 ----------------------------------------------------------------------------------------
 
+<br>
+
 ## 1- Install Node.js.
 
 There are several ways to install node.js
@@ -56,8 +58,9 @@ this will uninstall node and npm but will keep your configuration files.
 
 `sudo apt purge nodejs npm`
 
-<br>
+----------------------------------------------------------------------------------------
 
+<br>
 
 ## 2- Install PM2
 
@@ -67,7 +70,7 @@ this will uninstall node and npm but will keep your configuration files.
 The main feature of PM2 is to start your node.js app if your node app suffered any crash or if your VPS suffered an unexpected shutdown and restarted, therefore, you won't have to worry about manually starting your node app again.
 
 Additionally, PM2 is more than that. It's capable of running several node apps at the same time with independent management for each one of them, Also it allows you to duplicate the processes to use all the cores of your CPUs.
-----------------------------------------------------------------------------------------
+
 
 ### Install PM2
 ```
