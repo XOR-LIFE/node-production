@@ -1,6 +1,8 @@
 # **Take Your Node.js Project to The Production Environment (VPS/Dedicated Server).**
 
+
 The following instructions are based on **Ubuntu**, the steps are the same for whatever Linux distribution you are going to use but the commands might be different.
+----------------------------------------------------------------------------------------
 
 ## 1- Install Node.js.
 
@@ -65,6 +67,7 @@ this will uninstall node and npm but will keep your configuration files.
 The main feature of PM2 is to start your node.js app if your node app suffered any crash or if your VPS suffered an unexpected shutdown and restarted, therefore, you won't have to worry about manually starting your node app again.
 
 Additionally, PM2 is more than that. It's capable of running several node apps at the same time with independent management for each one of them, Also it allows you to duplicate the processes to use all the cores of your CPUs.
+----------------------------------------------------------------------------------------
 
 ### Install PM2
 ```
@@ -206,6 +209,7 @@ Here are some PM2 compatible modules (standalone Node.js applications managed by
 ```
 # Install latest PM2 version
 npm install pm2@latest -g
+
 # Save process list, exit old PM2 & restore all processes
 pm2 update
 ```
