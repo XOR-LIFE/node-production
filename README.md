@@ -78,6 +78,7 @@ pm2 -v
 ### How to:-
 
 <br>
+
 #### Start and Daemonize any application:
 
 `
@@ -87,6 +88,7 @@ pm2 start app.js
 Your app is now daemonized, monitored and kept alive forever.
 
 <br>
+
 #### List/Manage applications:
 
 `
@@ -118,6 +120,7 @@ pm2 monit
 [More about Application Management](https://pm2.io/doc/en/runtime/guide/process-management/?utm_source=github)
 
 <br>
+
 #### Cluster Mode: Node.js Load Balancing & Zero Downtime Reload
 
 As Node.js is monothreaded, PM2 can duplicate the processes to use all the cores for your CPUs. The Cluster mode is a special mode when starting a Node.js application, it starts multiple processes and load-balance HTTP/TCP/UDP queries between them. This increase overall performance (by a factor of x10 on 16 cores machines) and reliability (faster socket re-balancing in case of unhandled errors).
@@ -138,6 +141,7 @@ Hot Reload allows to update an application without any downtime:
 
 `
 pm2 reload <all|app_name>
+
 `
 <br>
 
@@ -150,6 +154,7 @@ pm2 monit
 ![Monit](https://github.com/Unitech/pm2/raw/master/pres/pm2-monit.png)
 
 <br>
+
 #### Log Management:
 
 `
@@ -159,6 +164,7 @@ pm2 logs
 [More about log management](https://pm2.io/doc/en/runtime/guide/log-management/)
 
 <br>
+
 #### Startup Hooks Generation
 
 PM2 can generates and configure a Startup Script to keep PM2 and your processes alive at every server restart.
@@ -179,6 +185,7 @@ pm2 unstartup
 [More about Startup Hooks](https://pm2.io/doc/en/runtime/guide/startup-hook/)   **MUST READ**
 
 <br>
+
 #### PM2 Modules
 
 PM2 embeds a simple and powerful module system. Installing a module is straightforward:
@@ -193,6 +200,7 @@ Here are some PM2 compatible modules (standalone Node.js applications managed by
 [**pm2-server-monit**](https://www.npmjs.com/package/pm2-server-monit) monitor the current server with more than 20+ metrics and 8 actions<br/>
 
 <br>
+
 #### Updating PM2
 
 ```
@@ -205,6 +213,7 @@ pm2 update
 *PM2 updates are seamless*
 
 <br>
+
 ### PM2+ Monitoring
 
 ![](https://raw.githubusercontent.com/Unitech/pm2/master/pres/pm2-ls-multi.png)
