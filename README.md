@@ -6,7 +6,7 @@ The following instructions are based on **Ubuntu**, the steps are the same for w
 
 <br>
 
-## 1- Install Node.js.
+## 1- Install Node.js and NPM.
 
 There are several ways to install node.js
 
@@ -241,5 +241,11 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 - [Using PM2 API](https://pm2.io/doc/en/runtime/reference/pm2-programmatic/)
 - [Graceful Shutdown](https://pm2.io/doc/en/runtime/best-practices/graceful-shutdown/)
 - **[Full Documentation](https://pm2.io/doc/en/runtime/overview/)**
+
+----------------------------------------------------------------------------------------
+
+<br>
+
+## 2- Install MongoDB
 
 
