@@ -49,6 +49,7 @@ sudo apt remove nodejs npm
 `
 
 this will uninstall node and npm but will keep your configuration files.
+
 <br>
 **To also delete your configuration files, use: **
 
