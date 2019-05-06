@@ -141,8 +141,8 @@ Hot Reload allows to update an application without any downtime:
 
 `
 pm2 reload <all|app_name>
-
 `
+
 <br>
 
 #### Terminal Based Monitoring:
