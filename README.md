@@ -44,20 +44,18 @@ npm -v
 
 **To uninstall node.js and npm simply use:**
 
-`
-sudo apt remove nodejs npm
-`
+`sudo apt remove nodejs npm`
 
 this will uninstall node and npm but will keep your configuration files.
 
+<br>
 
+**To also delete your configuration files, use:**
 
-**To also delete your configuration files, use: **
+`sudo apt purge nodejs npm`
 
-`
-sudo apt purge nodejs npm
-`
-
+<br>
+<br>
 
 ## 2- Install PM2
 
