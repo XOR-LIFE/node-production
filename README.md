@@ -6,13 +6,13 @@ The following instructions are based on **Ubuntu**, the steps are the same for w
 
 There are several ways to install node.js
 
- **1. Ubuntu Packages**
+ **1. Ubuntu Packages:**
 Not recommended at all because Ubuntu sucks at keeping their packages updated.
 
- **2. NodeSource Repository**
- Very Recommended, Easy to install and Quickly updated.
+ **2. NodeSource Repository:**
+ Very Recommended, Easy to install and Easy to update.
  
- **3. NVM (Node Version Manager)**
+ **3. NVM (Node Version Manager):**
 Used if you are going to install multiple node versions on your machine.
 
 Based on the previous methods, I'll go with the second option.
@@ -21,7 +21,7 @@ Based on the previous methods, I'll go with the second option.
 
 `sudo apt update && sudo apt upgrade`
 
-2. Install important packages
+2. Install important packages for node and npm
 
 `sudo apt install gcc g++ make build-essential curl -y`
 
@@ -42,16 +42,16 @@ npm -v
 
 ## Uninstall Node.js and NPM
 
-**To uninstall node.js and npm simply use:
-**
+**To uninstall node.js and npm simply use:**
+
 `
 sudo apt remove nodejs npm
 `
 
 this will uninstall node and npm but will keep your configuration files.
 <br>
-**To also delete your configuration files, use: 
-**
+**To also delete your configuration files, use: **
+
 `
 sudo apt purge nodejs npm
 `
