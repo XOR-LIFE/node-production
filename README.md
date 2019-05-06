@@ -55,9 +55,10 @@ this will uninstall node and npm but will keep your configuration files.
 `sudo apt purge nodejs npm`
 
 <br>
-<br>
+
 
 ## 2- Install PM2
+-------------------------------
 
 **PM2 identifies itself as a "PM2 is a production process manager for Node.js applications with a built-in load balancer. It allows you to keep applications alive forever, to reload them without downtime and to facilitate common system admin tasks."**
 
