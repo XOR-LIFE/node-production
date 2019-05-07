@@ -1,4 +1,4 @@
-# **Take Your Node.js Project to The Production Environment (VPS/Dedicated Server).**
+# **Take Your NodeJS Project to The Production Environment (VPS/Dedicated Server).**
 
 
 The following instructions are based on **Ubuntu**, the steps are the same for whatever Linux distribution you are going to use but the commands might be different.
@@ -6,7 +6,7 @@ The following instructions are based on **Ubuntu**, the steps are the same for w
 
 <br>
 
-## 1- Install Node.js and NPM.
+## 1- Install NodeJS and NPM.
 
 There are several ways to install node.js
 
@@ -14,7 +14,7 @@ There are several ways to install node.js
 Not recommended at all because Ubuntu sucks at keeping their packages updated.
 
  **2. NodeSource Repository:**
- Very Recommended, Easy to install and Easy to update.
+Very Recommended, Easy to install and Easy to update.
  
  **3. NVM (Node Version Manager):**
 Used if you are going to install multiple node versions on your machine.
@@ -29,22 +29,23 @@ Based on the previous methods, I'll go with the second option.
 
 `sudo apt install gcc g++ make build-essential curl -y`
 
-3. Install node.js from NodeSource Repository
+3. Install node.js and npm from NodeSource Repository
 
 ```
 curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+sudo apt update
 sudo apt-get install -y nodejs
 ```
 
 Above command will install node.js version 12, if you want a previous version just replace 12 with desired node version e.g. (11, 10, 8)
 
-This will install both node.js  and npm, to check their versions simply use.
+to check both node.js and npm versions, simply use.
 ```
 node -v
 npm -v
 ```
 
-## Uninstall Node.js and NPM
+## Uninstall NodeJS and NPM
 
 **To uninstall node.js and npm simply use:**
 
@@ -173,7 +174,7 @@ pm2 logs
 
 #### Startup Hooks Generation
 
-PM2 can generates and configure a Startup Script to keep PM2 and your processes alive at every server restart.
+PM2 can generate and configure a Startup Script to keep PM2 and your processes alive at every server restart.
 
 Init Systems Supported: **systemd**, **upstart**, **launchd**, **rc.d**
 
@@ -211,7 +212,7 @@ Here are some PM2 compatible modules (standalone Node.js applications managed by
 
 ```
 # Install latest PM2 version
-npm install pm2@latest -g
+sudo npm install pm2@latest -g
 
 # Save process list, exit old PM2 & restore all processes
 pm2 update
