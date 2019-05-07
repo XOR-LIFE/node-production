@@ -264,7 +264,7 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 ## 3- Install Nginx
 
-There are several ways to install node.js
+There are several ways to install NGINX
 
  **1. Ubuntu Packages:**
 Again, Not recommended at all because Ubuntu sucks at keeping their packages updated.
