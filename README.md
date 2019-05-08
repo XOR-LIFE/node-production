@@ -98,17 +98,19 @@ pm2 -v
 #### Start and Daemonize any application:
 
 ```
-pm2 start app.js
+pm2 start app.js  – Starts a specific application
 ```
 
-Your app is now daemonized, monitored and kept alive forever.
+Your app is now daemonized, monitored and forever alive, auto-restarting after crashes and machine restarts – all with one simple command
+
+![App starting](https://pm2.io/_nuxt/img/04fdf99.png)
 
 <br>
 
 #### List/Manage applications:
 
 ```
-pm2 list
+pm2 list – Show a list of all applications
 ```
 
 ![Process listing](https://github.com/unitech/pm2/raw/master/pres/pm2-list.png)
@@ -116,21 +118,15 @@ pm2 list
 Managing apps is straightforward:
 
 ```
-pm2 stop     <app_name|id|'all'|json_conf>
-pm2 restart  <app_name|id|'all'|json_conf>
-pm2 delete   <app_name|id|'all'|json_conf>
+pm2 stop     <app_name|id|'all'|json_conf>  – Stops applications
+pm2 restart  <app_name|id|'all'|json_conf>  – Restarts applications
+pm2 delete   <app_name|id|'all'|json_conf>  – Delete from PM2 process list 
 ```
 
 To have more details on a specific application:
 
 ```
-pm2 describe <id|app_name>
-```
-
-To monitor logs, custom metrics, application information:
-
-```
-pm2 monit
+pm2 describe <id|app_name>  - Display all informations about a specific process
 ```
 
 [More about Application Management](https://pm2.io/doc/en/runtime/guide/process-management/?utm_source=github)
@@ -156,12 +152,14 @@ pm2 start app.js -i <processes>
 Hot Reload allows to update an application without any downtime:
 
 ```
-pm2 reload <all|app_name>
+pm2 reload <all|app_name>  – Reloads the app configuration (this comes in handy when you modify your application’s environment variables)
 ```
 
 <br>
 
 #### Terminal Based Monitoring:
+
+To monitor logs, custom metrics and information abouut your application’s health. For example, you’ll see CPU utilization, memory usage, requests/minute, and more!
 
 ```
 pm2 monit
@@ -173,9 +171,20 @@ pm2 monit
 
 #### Log Management:
 
+PM2 has built-in log management. It aggregates log data from all of your applications and writes it to a single source for viewing. You can even tail the logs in real-time to see what’s going on behind the scenes with your application. Log Management from PM2 comes with log rotation as well, which is important, especially if you’re application is outputting verbose logs on a frequent basis.
+
+
+
 ```
-pm2 logs
+pm2 logs – Outputs logs from all running applications
+
+pm2 logs app – Outputs logs from only the “app” application
+
+pm2 flush – Flushes all log data, freeing up disk space
 ```
+
+Remember, the most important thing to do is to enable log rotation. Doing so will split one giant log file into many smaller files that are more manageable for PM2. you can do so through 'pm2-logrotate' module (See PM2 Modules Section Below).
+
 
 [More about log management](https://pm2.io/doc/en/runtime/guide/log-management/)
 
@@ -278,7 +287,7 @@ Based on the previous methods, I'll go with the second option.
 
 <br>
 
-First of all you need to know that NGINX is available in two versions:
+First of all you need to know that NGINX Open Source is available in two versions:
 
 * **Mainline** – Includes the latest features and bug fixes and is always up to date. It is reliable, but it may include some experimental modules, and it may also have some number of new bugs.
 * **Stable** – Doesn’t include all of the latest features, but has critical bug fixes that are always backported to the mainline version. We recommend the stable version for production servers.
