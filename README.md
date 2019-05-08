@@ -271,7 +271,7 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 <br>
 
-## 3- Install Nginx
+## 4- Install Nginx
 
 **Nginx** is one of the most renowned open source amongst the web servers on the planet. It is also in charge of serving more than half of the activity on the web. It is equipped for taking care of assorted workloads and working with other programming languages to give a total web stack.
 
