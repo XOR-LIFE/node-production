@@ -101,7 +101,7 @@ pm2 -v
 pm2 start app.js  – Starts a specific application
 ```
 
-Your app is now daemonized, monitored and forever alive, auto-restarting after crashes and machine restarts – all with one simple command
+Your app is now daemonized, monitored, forever alive, auto-restarting after crashes and machine restarts – all with one simple command
 
 ![App starting](https://pm2.io/_nuxt/img/04fdf99.png)
 
@@ -110,7 +110,7 @@ Your app is now daemonized, monitored and forever alive, auto-restarting after c
 #### List/Manage applications:
 
 ```
-pm2 list – Show a list of all applications
+pm2 list  – Show a list of all applications
 ```
 
 ![Process listing](https://github.com/unitech/pm2/raw/master/pres/pm2-list.png)
@@ -273,6 +273,55 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 ## 3- Install Nginx
 
+**Nginx** is one of the most renowned open source amongst the web servers on the planet. It is also in charge of serving more than half of the activity on the web. It is equipped for taking care of assorted workloads and working with other programming languages to give a total web stack.
+
+HTTP proxies are commonly used with web applications for gzip encoding, static file serving, HTTP caching, SSL handling, load balancing, and spoon feeding clients. Using Nginx to handle static content and proxying requests to your scripts to the actual interpreter is better.
+
+Nginx can be used to remove some load from the Node.js processes, for example, 
+
+* Privileges - Not having to worry about privileges/setuid for the Node.js process. Only root can bind to port 80 typically. If you let nginx worry about starting as root, binding to port 80, and then relinquishing its root privileges, it means your Node app doesn't have to worry about it.
+
+* Static files - it could be argued that using a CDN it's not as important (though the initial files must still come off your origin) and NGINX is able to serve static files much faster than NodeJS can, and keep node for the more valuable and complex task of serving up the dynamic part of your application. Most often, you'll use nginx as a reverse proxy: the web request will be received by nginx, which acts as a load balancer in front of several identical or subdivided servers.  If it needs to serve static files as well, it will just answer those requests directly. Web Servers, in general, are used to **cache pages** to provide them quicker than a service that would calculate the page every time requested.
+
+* Error Pages - You can more easily display meaningful error pages or fall back onto a static site if your node service crashes. Otherwise, users may just get a timed out connection, this allows your users to never get an error about unable to establish a connection.
+
+* Performance - it's true that node app clustering e.g. with PM2, and container-level scaling (e.g. kubernetes, AWS) will improve performance - though this would be in addition to - not instead of - any gains from using nginx.
+
+Further Read: [Should I use both NGINX and PM2 for Node.js production deployment?](https://www.quora.com/Should-I-use-both-NGINX-and-PM2-for-Node-js-production-deployment)
+
+
+* SSL/HTTPS - Issuing an SSL Certificate and Handling HTTPS (Nginx is performing consistently better in TLS performance).
+
+* Security -  Running another web server in front of Node may help to mitigate security flaws and DoS attacks against Node. You put Nginx in front of node as a security precaution in case there are any undiscovered exploits in node that might be exposed by not having it protected by a proxy.
+
+<br>
+
+You also use Nginx in front of Node because it is easier to configure, can be restarted separately from the Node process using standard initd/upstart scripts & because binary patches will be released faster than Node in case of any potential future security issues like Heartbleed, which admittedly Node wasn't susceptible to.
+
+Because servers such as NGINX are highly optimized (ie fast) for the task of responding to (and/or forwarding) http requests, particularly for static files. Node could do everything that NGINX can do in this respect but NGINX will do it faster.
+
+It also happens to be a lot less work to set up NGINX configuration for a certain scenario than writing everything you'd need from scratch in JavaScript. **If you're going to** scale your app you're going to need some kind of load balancer / caching proxy in front of your node servers. You could write your own load balancer / caching proxy in node but why bother when you can use a mature, battle-tested industry standard product (that is also faster) instead? 
+
+One of the major reasons to proxy node.js through Nginx is Server Blocks (a.k.a Virtual Hosts in Apache), And this is basically the feature of being able to host multiple websites (domain names) on a single server, meaning that, you don't have enough IPv4 addresses to host each one on its own dedicated IP. This is extremely useful given that you own multiple sites and don’t want to go through the lengthy (and expensive) process of setting up a new web server for each site.
+
+Further Read: [How to Create a Nginx Virtual Host (AKA Server Blocks)](https://www.keycdn.com/support/nginx-virtual-host)
+
+
+
+
+
+That said, there are other benefits to using a server like nginx facing the public.
+
+In those situations, usually, node.js will still be performing the functions of a web server, they'll just be behind the main nginx proxy and users won't be hitting them directly.
+
+<br>
+
+**NOTE: DON'T EVER USE Apache Server With NodeJS**
+
+<br>
+
+### Install NGINX
+
 There are several ways to install NGINX
 
  **1. Ubuntu Packages:**
@@ -372,7 +421,7 @@ HTTP/1.1 200 OK
 Server: nginx/1.13.8
 ```
 
-
+**Congratulations, Now you server is up and running very well.**
 
 
 
