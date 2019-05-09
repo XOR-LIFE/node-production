@@ -146,6 +146,12 @@ pm2 start app.js  – Starts a specific application
 
 Your app is now daemonized, monitored, forever alive, auto-restarting after crashes and machine restarts – all with one simple command
 
+You can also Start your application and give it a name in the PM2 list, if you run several applications and "index.js/app.js" might confuse you
+
+```
+pm2 start app.js --name="Shop App"
+```
+
 ![App starting](https://pm2.io/_nuxt/img/04fdf99.png)
 
 <br>
@@ -310,6 +316,100 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 ## 4- Install and Setup MongoDB
 
+**MongoDB is a cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schemata. MongoDB is developed by MongoDB Inc. and licensed under the Server Side Public License (SSPL).**
+
+
+### Install MongoDB
+
+There are several ways to install node.js
+
+ **1. Ubuntu Packages:**
+Again, Not recommended at all because Ubuntu sucks at keeping their packages updated.
+
+ **2. MongoDB Packages:**
+Latest Version, Very Recommended, Easy to install and Easy to update.
+ 
+<br>
+
+Based on the previous methods, I'll go with the second option.
+
+<br>
+ 
+**MongoDB Version:**
+This tutorial installs MongoDB 4.x Community Edition on LTS Ubuntu Linux systems.
+
+
+**Platform Support:**
+MongoDB only provides packages for the following 64-bit LTS (long-term support) Ubuntu releases:
+
+* 14.04 LTS (trusty)
+* 16.04 LTS (xenial)
+* 18.04 LTS (bionic)
+
+<br>
+
+**IMPORTANT (MongoDB Official Statement):**
+
+> The `mongodb-org` package is officially maintained and supported by MongoDB Inc. and kept up-to-date with the most recent MongoDB releases. This installation procedure uses the `mongodb-org` package.
+> 
+> The `mongodb` package provided by Ubuntu is **not** maintained by MongoDB Inc. and conflicts with the `mongodb-org` package. To check if Ubuntu’s `mongodb` package is installed on the system, run `sudo apt list --installed | grep mongodb`. You can use `sudo apt remove mongodb` and `sudo apt purge mongodb` to remove and purge the `mongodb` package before attempting this procedure.
+> 
+
+<br>
+
+Alright Then, Let's start:
+
+<br>
+
+1. Import the public key used by the package management system:
+```
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+```
+
+2. Create a list file for MongoDB:
+
+If you are unsure of what Ubuntu version you are running, open a terminal or shell on the host and execute `lsb_release -dc`
+
+* For Ubuntu 18.04 (Bionic):
+```
+echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+```
+
+* For Ubuntu 16.04 (Xenial)
+```
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+```
+
+* For Ubuntu 14.04 (Trusty):
+```
+echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+```
+
+3. Reload local package database:
+```
+sudo apt-get update
+```
+
+4. Install the MongoDB packages (Latest Version):
+```
+sudo apt-get install -y mongodb-org
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**Finally, [MongoDB Production Notes](https://docs.mongodb.com/manual/administration/production-notes/)**
 
 ----------------------------------------------------------------------------------------
 
@@ -373,7 +473,7 @@ There are several ways to install NGINX
  **1. Ubuntu Packages:**
 Again, Not recommended at all because Ubuntu sucks at keeping their packages updated.
 
- **2. NGINX Repository:**
+ **2. NGINX Packages:**
 Latest Version, Very Recommended, Easy to install and Easy to update.
 
 <br>
@@ -411,7 +511,7 @@ deb https://nginx.org/packages/mainline/ubuntu/ <CODENAME> nginx
 deb-src https://nginx.org/packages/mainline/ubuntu/ <CODENAME> nginx
 ```
 
-where:
+**Where:**
 
 * The `/mainline` element in the pathname points to the latest mainline version of NGINX; delete it to get the latest stable version
 * `<CODENAME>` is the codename of an Ubuntu release
@@ -493,6 +593,55 @@ sudo systemctl start nginx.service
 <br>
 
 ## 6- Adjust your Node Application for Production
+
+This tutorial is taken from [Flavio Copes Website](https://flaviocopes.com/node-difference-dev-prod/)
+
+You can have different configurations for production and development environments.
+
+Node assumes it’s always running in a development environment. You can signal Node.js that you are running in production by setting the **`NODE_ENV=production`** environment variable.
+
+This is usually done by executing the command
+```
+export NODE_ENV=production
+```
+in the shell, but it’s better to put it in your shell configuration file (e.g.**` .bash_profile`** with the Bash shell) because otherwise the setting does not persist in case of a system restart.
+
+You can also apply the environment variable by prepending it to your application initialization command:
+```
+NODE_ENV=production node app.js
+```
+This environment variable is a convention that is widely used in external libraries as well.
+
+Setting the environment to **production** generally ensures that
+
+* logging is kept to a minimum, essential level
+* more caching levels take place to optimize performance
+
+For example Pug, the templating library used by Express, compiles in debug mode if **NODE_ENV** is not set to **production**. Express views are compiled in every request in development mode, while in production they are cached. There are many more examples.
+
+Express provides configuration hooks specific to the environment, which are automatically called based on the NODE_ENV variable value:
+```
+app.configure('development', () => {
+  //...
+})
+app.configure('production', () => {
+  //...
+})
+app.configure('production', 'staging', () => {
+  //...
+})
+```
+For example you can use this to set different error handlers for different mode:
+```
+app.configure('development', () => {
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+})
+
+app.configure('production', () => {
+  app.use(express.errorHandler())
+})
+```
+
 
 
 ----------------------------------------------------------------------------------------
