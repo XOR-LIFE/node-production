@@ -86,11 +86,11 @@ npm init
 ```
 This command prompts you for a number of things, such as the name and version of your application. For now, you can simply hit 'RETURN/ENTER' (In Your Keyboard) to accept the defaults for all of them.
 
-* Now install Express in the testapp directory and save it in the dependencies list. For example:
+* Now install Express in the `testapp` directory and save it in the dependencies list:
 ```
 npm install express --save
 ```
-* In the testapp directory, create a file named index.js and copy in the code below:
+* In the `testapp` directory, create a file named `index.js` and copy in the code below:
 ```
 const express = require('express')
 const app = express()
@@ -109,10 +109,12 @@ Then, load http://localhost:3000/ in a browser to see the output.
 
 You can of course now navigate to your VPS IP Address from an outside machine and you would see the **'Hello World!'** message, The example above is actually a working server, but we are just making sure we are making the right footsteps.
 
+----------------------------------------------------------------------------------------
+
 <br>
 
 ## 3- Install PM2
-
+----------------------------------------------------------------------------------------
 
 **PM2 identifies itself as "PM2 is a production process manager for Node.js applications with a built-in load balancer. It allows you to keep applications alive forever, to reload them without downtime and to facilitate common system admin tasks."**
 
@@ -308,6 +310,7 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 ## 4- Install and Setup MongoDB
 
+
 ----------------------------------------------------------------------------------------
 
 <br>
@@ -492,10 +495,11 @@ sudo systemctl start nginx.service
 ## 6- Adjust your Node Application for Production
 
 
+----------------------------------------------------------------------------------------
 
+<br>
 
-
-
-
+## 7- Setup NGINX
+----------------------------------------------------------------------------------------
 
 
