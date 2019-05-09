@@ -70,7 +70,48 @@ this will uninstall node and npm but will keep your configuration files.
 
 <br>
 
-## 2- Install PM2
+## 2- Create a Node App With Express Server (Testing).
+----------------------------------------------------------------------------------------
+
+* Since you’ve already installed Node.js, create a directory to hold your application, and make it your working directory:
+```
+mkdir testapp
+
+cd testapp
+```
+
+* Use the `npm init` command to create a package.json file for your application:
+```
+npm init
+```
+This command prompts you for a number of things, such as the name and version of your application. For now, you can simply hit 'RETURN/ENTER' (In Your Keyboard) to accept the defaults for all of them.
+
+* Now install Express in the testapp directory and save it in the dependencies list. For example:
+```
+npm install express --save
+```
+* In the testapp directory, create a file named index.js and copy in the code below:
+```
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => res.send('Hello World!'))
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+```
+
+* Run the app with the following command:
+```
+node index.js
+```
+Then, load http://localhost:3000/ in a browser to see the output.
+
+You can of course now navigate to your VPS IP Address from an outside machine and you would see the **'Hello World!'** message, The example above is actually a working server, but we are just making sure we are making the right footsteps.
+
+<br>
+
+## 3- Install PM2
 
 
 **PM2 identifies itself as "PM2 is a production process manager for Node.js applications with a built-in load balancer. It allows you to keep applications alive forever, to reload them without downtime and to facilitate common system admin tasks."**
@@ -265,13 +306,13 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 <br>
 
-## 3- Install MongoDB
+## 4- Install and Setup MongoDB
 
 ----------------------------------------------------------------------------------------
 
 <br>
 
-## 4- Install Nginx
+## 5- Install Nginx
 
 **Nginx** is one of the most renowned open source amongst the web servers on the planet. It is also in charge of serving more than half of the activity on the web. It is equipped for taking care of assorted workloads and working with other programming languages to give a total web stack. Nginx is distinguished as the most effective and light-weight web server today.
 
@@ -280,6 +321,8 @@ HTTP proxies are commonly used with web applications for gzip encoding, static f
 Nginx can be used to remove some load from the Node.js processes, for example, 
 
 * Privileges - Not having to worry about privileges/setuid for the Node.js process. Only root can bind to port 80 typically. If you let nginx worry about starting as root, binding to port 80, and then relinquishing its root privileges, it means your Node app doesn't have to worry about it.
+**If** you want to run node directly on port 80, that means you have to run node as root. If your application has any security flaws, it will become significantly compounded by the fact that it has access to do anything it wants. For example, if you write something that accidentally allows the user to read arbitrary files, now they can read files from other server user's accounts.
+If you use nginx in front of node, you can run your node as a limited user on port 3000 (or whatever) and then have nginx run as root on port 80, forwarding requests to port 3000. Now the node application is limited to the user permissions you give it.
 
 * Static files - it could be argued that using a CDN it's not as important (though the initial files must still come off your origin) and NGINX is able to serve static files much faster than NodeJS can, and keep node for the more valuable and complex task of serving up the dynamic part of your application. Most often, you'll use nginx as a reverse proxy: the web request will be received by nginx, which acts as a load balancer in front of several identical or subdivided servers.  If it needs to serve static files as well, it will just answer those requests directly. Web Servers, in general, are used to **cache pages** to provide them quicker than a service that would calculate the page every time requested.
 
@@ -442,7 +485,11 @@ sudo systemctl enable nginx.service
 sudo systemctl start nginx.service
 ```
 
+----------------------------------------------------------------------------------------
 
+<br>
+
+## 6- Adjust your Node Application for Production
 
 
 
