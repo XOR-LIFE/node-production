@@ -26,15 +26,16 @@ Based on the previous methods, I'll go with the second option.
 <br>
 
 1. Update your Ubuntu:
-
-`sudo apt update && sudo apt upgrade`
+```
+sudo apt update && sudo apt upgrade
+```
 
 2. Install important packages for node and npm:
-
-`sudo apt install gcc g++ make build-essential curl -y`
+```
+sudo apt install gcc g++ make build-essential curl -y
+```
 
 3. Install node.js and npm from NodeSource Repository:
-
 ```
 curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 
@@ -55,16 +56,18 @@ npm -v
 ## Uninstall NodeJS and NPM
 
 **To uninstall node.js and npm simply use:**
-
-`sudo apt remove nodejs npm`
+```
+sudo apt remove nodejs npm
+```
 
 this will uninstall node and npm but will keep your configuration files.
 
 <br>
 
 **To also delete your configuration files, use:**
-
-`sudo apt purge nodejs npm`
+```
+sudo apt purge nodejs npm
+```
 
 ----------------------------------------------------------------------------------------
 
@@ -107,7 +110,7 @@ node index.js
 ```
 Then, load http://localhost:3000/ in a browser to see the output.
 
-You can of course now navigate to your VPS IP Address from an outside machine and you would see the **'Hello World!'** message, The example above is actually a working server, but we are just making sure we are making the right footsteps.
+You can of course now navigate to your http://VPS-IP-Address:3000 from an outside machine and you would see the **'Hello World!'** message, The example above is actually a working server, but we are just making sure we are making the right footsteps.
 
 ----------------------------------------------------------------------------------------
 
@@ -314,12 +317,12 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 <br>
 
-## 4- Install and Setup MongoDB
+## 4- Install and Configure MongoDB
 
 **MongoDB is a cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schemata. MongoDB is developed by MongoDB Inc. and licensed under the Server Side Public License (SSPL).**
 
 
-### Install MongoDB
+### Step 1: Install MongoDB
 
 There are two ways to install MongoDB
 
@@ -395,11 +398,47 @@ sudo apt-get update
 sudo apt-get install -y mongodb-org
 ```
 
+5. Check for MongoDB version:
+```
+mongod --version
+```
 
+6. Start MongoDB and make it auto start at reboot:
+```
+sudo service mongod start
 
+sudo systemctl enable mongod
+```
 
+7. Check that MongoDb is active and Running:
 
+* Method 1:
+```
+sudo systemctl status mongod
+```
+You should get **Active: active (running)**
 
+* Method 2:
+```
+mongo --eval 'db.runCommand({ connectionStatus: 1 })'
+```
+A value of `1` for the `ok` field indicates success.
+
+ **How to Manage MongoDB Service**
+
+* Stop MongoDB
+`
+sudo systemctl stop mongodb
+`
+
+* Restart MongoDB
+`
+sudo systemctl restart mongodb
+`
+
+<br>
+
+### Step 2: Configure MongoDB
 
 
 
@@ -463,6 +502,10 @@ In those situations, usually, node.js will still be performing the functions of 
 <br>
 
 **NOTE: DON'T EVER USE Apache Server With NodeJS**
+
+<br>
+
+![](https://i.ibb.co/tXWzCNG/network-diagram.jpg)
 
 <br>
 
