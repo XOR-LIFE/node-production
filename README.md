@@ -510,9 +510,9 @@ echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \ | sudo tee
 echo "deb http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx" \ | sudo tee /etc/apt/sources.list.d/nginx.list
 ```
 
-**I personally go with the stable version, Also Nginx recommends the stable version for production**
+**I Personally go with the stable version, Also Nginx recommends the stable version for production.**
 
-3. import an official nginx signing key so apt could verify the packages authenticity:
+3. import official nginx signing key so apt could verify the packages authenticity:
 ```
 curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
 ```
@@ -563,7 +563,7 @@ sudo systemctl is-enabled nginx.service
 And you should get `enabled` as output. If you didn't, then go to step **10**.
 
 
-10. Enable NGINX to start on boot and start NGINX immediately:
+10. Enable Nginx to start on boot and start Nginx immediately:
 
 ```
 sudo systemctl enable nginx.service
