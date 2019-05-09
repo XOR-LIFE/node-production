@@ -273,7 +273,7 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 ## 4- Install Nginx
 
-**Nginx** is one of the most renowned open source amongst the web servers on the planet. It is also in charge of serving more than half of the activity on the web. It is equipped for taking care of assorted workloads and working with other programming languages to give a total web stack.
+**Nginx** is one of the most renowned open source amongst the web servers on the planet. It is also in charge of serving more than half of the activity on the web. It is equipped for taking care of assorted workloads and working with other programming languages to give a total web stack. Nginx is distinguished as the most effective and light-weight web server today.
 
 HTTP proxies are commonly used with web applications for gzip encoding, static file serving, HTTP caching, SSL handling, load balancing, and spoon feeding clients. Using Nginx to handle static content and proxying requests to your scripts to the actual interpreter is better.
 
@@ -397,10 +397,10 @@ sudo apt-get update
 sudo apt-get install nginx
 ```
 
-6. Check NGINX Version:
+6. Print NGINX version, compiler version, and configure script parameters:
 
 ```
-nginx -v
+sudo nginx -V
 ```
 
 7. Start NGINX:
@@ -421,7 +421,34 @@ HTTP/1.1 200 OK
 Server: nginx/1.13.8
 ```
 
+You can also open your browser and navigate to your IP address to see default NGINX page. That is an indicator that NGINX is up and running.
+
 **Congratulations, Now you server is up and running very well.**
+
+9. By default Nginx is now configured to run after a reboot, to check that use:
+
+```
+sudo systemctl is-enabled nginx.service
+```
+
+And you should get `enabled` as output. If you didn't, then go to step **10**.
+
+
+10. Enable NGINX to start on boot and start NGINX immediately:
+
+```
+sudo systemctl enable nginx.service
+
+sudo systemctl start nginx.service
+```
+
+
+
+
+
+
+
+
 
 
 
