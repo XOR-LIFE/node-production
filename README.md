@@ -321,7 +321,7 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 ### Install MongoDB
 
-There are several ways to install node.js
+There are two ways to install MongoDB
 
  **1. Ubuntu Packages:**
 Again, Not recommended at all because Ubuntu sucks at keeping their packages updated.
@@ -468,7 +468,7 @@ In those situations, usually, node.js will still be performing the functions of 
 
 ### Install NGINX
 
-There are several ways to install NGINX
+There are two ways to install NGINX
 
  **1. Ubuntu Packages:**
 Again, Not recommended at all because Ubuntu sucks at keeping their packages updated.
@@ -493,54 +493,37 @@ First of all you need to know that NGINX Open Source is available in two version
 
 <br>
 
-1. Download the key used to sign NGINX packages and the repository, and add it to the `apt` program’s key ring:
+1. Install the prerequisites:
 ```
-sudo wget https://nginx.org/keys/nginx_signing.key
-
-sudo apt-key add nginx_signing.key
+sudo apt install curl gnupg2 ca-certificates lsb-release
 ```
 
-2. Edit the **/etc/apt/sources.list** file, for example with `nano`:
-```
-sudo nano /etc/apt/sources.list
-```
+2. Set up the apt repository:
 
-3. Add these lines to **sources.list** to name the repositories from which the NGINX source can be obtained:
+* To get the Stable nginx package, use:
 ```
-deb https://nginx.org/packages/mainline/ubuntu/ <CODENAME> nginx
-deb-src https://nginx.org/packages/mainline/ubuntu/ <CODENAME> nginx
+echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \ | sudo tee /etc/apt/sources.list.d/nginx.list
 ```
 
-**Where:**
-
-* The `/mainline` element in the pathname points to the latest mainline version of NGINX; delete it to get the latest stable version
-* `<CODENAME>` is the codename of an Ubuntu release
-
-
-
-|Version|Codename|Supported Platforms|
-|---|---|---|
-|14.04|trusty|x86_64, i386, aarch64/arm64|
-|16.04|xenial|x86_64, i386, ppc64el, aarch64/arm64|
-|18.04|bionic|x86_64, aarch64/arm64|
-|18.10|cosmic|x86_64|
-
-
-For example, to get the latest stable package for Ubuntu 18.04 (“bionic”), add:
+* To get the Mainline nginx package, use:
 ```
-deb https://nginx.org/packages/ubuntu/ bionic nginx
-deb-src https://nginx.org/packages/ubuntu/ bionic nginx
+echo "deb http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx" \ | sudo tee /etc/apt/sources.list.d/nginx.list
 ```
-4. Save the changes and quit.
 
-5. Install NGINX:
+**I personally go with the stable version, Also Nginx recommends the stable version for production**
 
+3. import an official nginx signing key so apt could verify the packages authenticity:
+```
+curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
+```
+
+4. To install nginx, run the following commands:
 ```
 sudo apt-get remove nginx-common
 
-sudo apt-get update
+sudo apt update
 
-sudo apt-get install nginx
+sudo apt install nginx
 ```
 
 6. Print NGINX version, compiler version, and configure script parameters:
@@ -592,9 +575,9 @@ sudo systemctl start nginx.service
 
 <br>
 
-## 6- Adjust your Node Application for Production
+## 6- Adjust Your Node Application for Production
 
-This tutorial is taken from [Flavio Copes Website](https://flaviocopes.com/node-difference-dev-prod/)
+**This tutorial is taken from [Flavio Copes Website](https://flaviocopes.com/node-difference-dev-prod/)**
 
 You can have different configurations for production and development environments.
 
