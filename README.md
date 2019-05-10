@@ -319,7 +319,7 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 ## 4- Install and Configure MongoDB
 
-**MongoDB is a cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schemata. MongoDB is developed by MongoDB Inc. and licensed under the Server Side Public License (SSPL).**
+**MongoDB is a well-known NoSQL database that offers high performance, high availability and automatic scaling. It differs from RDBMS such as MySQL, PostgreSQL and SQLite because it does not use SQL to set and retrieve data. MongoDB stores data in `documents` called BSON (binary representation of JSON with additional information). MongoDB is only available for the 64-bit long-term support Ubuntu release.**
 
 
 ### Step 1: Install MongoDB
@@ -424,27 +424,134 @@ mongo --eval 'db.runCommand({ connectionStatus: 1 })'
 ```
 A value of `1` for the `ok` field indicates success.
 
+
  **How to Manage MongoDB Service**
 
 * Stop MongoDB
 `
-sudo systemctl stop mongodb
+sudo service mongod stop
 `
 
 * Restart MongoDB
 `
-sudo systemctl restart mongodb
+sudo service mongod restart
+`
+
+* Disable MongoDB from auto start on boot
+`
+sudo systemctl disable mongodb
 `
 
 <br>
 
 ### Step 2: Configure MongoDB
 
+<br>
+
+* **Add A User For The First Time:**
+
+1. Open MongoDB shell:
+```
+mongo
+```
+
+2. Switch to the database admin:
+```
+use admin
+```
+
+3. Create the root user:
+```
+db.createUser({user:"admin", pwd:"pass123", roles:[{role:"root", db:"admin"}]})
+```
+change `pass123` to the password of your choice
+
+3. List all available databases:
+```
+show dbs
+```
+
+5. Exit from the MongoDB shell:
+```
+exit
+```
+
+<br>
+
+* **Enable MongoDB authentication:**
+
+1. Edit the mongodb service file `/lib/systemd/system/mongod.service` with your editor.
+```
+sudo nano /lib/systemd/system/mongod.service
+```
+
+2. On the 'ExecStart' line 10, add the new option `--auth` before `--config` to be like this:
+```
+ExecStart=/usr/bin/mongod --auth --config /etc/mongod.conf
+```
+Save the service file and exit
+
+3. Reload the systemd service:
+```
+sudo systemctl daemon-reload
+
+sudo service mongod restart
+```
+
+4. And connect to the MongoDB shell with this command:
+```
+mongo -u admin -p pass123 --authenticationDatabase admin
+```
+And you should see the mongo shell, type `exit` and run.
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Uninstall MongoDB
+
+**Warning: All configuration and databases will be completely removed after this process. And it is irreversible, so ensure that all of your configuration and data is backed up before proceeding.**
+
+
+
+**To Uninstall MongoDB, use:**
+```
+sudo service mongod stop
+
+sudo apt-get purge mongodb-org*
+
+sudo rm -r /var/log/mongodb
+
+sudo rm -r /var/lib/mongodb
+```
 
 
 
@@ -492,9 +599,6 @@ One of the major reasons to proxy node.js through Nginx is Server Blocks (a.k.a 
 Further Read: [How to Create a Nginx Virtual Host (AKA Server Blocks)](https://www.keycdn.com/support/nginx-virtual-host)
 
 
-
-
-
 That said, there are other benefits to using a server like nginx facing the public.
 
 In those situations, usually, node.js will still be performing the functions of a web server, they'll just be behind the main nginx proxy and users won't be hitting them directly.
@@ -525,7 +629,7 @@ Based on the previous methods, I'll go with the second option.
 
 <br>
 
-First of all you need to know that NGINX Open Source is available in two versions:
+First, you need to know that NGINX Open Source is available in two versions:
 
 * **Mainline** – Includes the latest features and bug fixes and is always up to date. It is reliable, but it may include some experimental modules, and it may also have some number of new bugs.
 * **Stable** – Doesn’t include all of the latest features, but has critical bug fixes that are always backported to the mainline version. We recommend the stable version for production servers.
