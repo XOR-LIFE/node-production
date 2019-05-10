@@ -489,7 +489,7 @@ exit
 
 * **Mongodb Configuration File:**
 
-The configuration file for MongoDB is located at` /etc/mongod.conf`, and is written in **YAML** format. Most of the settings are well commented within the file. We’ve outlined the default options below:
+The configuration file for MongoDB is located at` /etc/mongod.conf`, and is written in **YAML** format. Most of the settings are well commented within the file. Here is some outlined default options below:
 
 * `dbPath` indicates where the database files will be stored (`/var/lib/mongodb` by default)
 * `systemLog` specifies the various logging options, explained below:
@@ -551,7 +551,7 @@ And you should see the mongo shell, type `exit` and run.
 
 * **Change MongoDB Deafult Port:**
 
-You can specify mongod’s listening port by setting it in the mongodb configuration file.
+This is an optional thing to do, if you intend, You can specify mongod’s listening port by setting it in the mongodb configuration file.
 
 Open `/etc/mongod.conf` with your favorite code editor and search for the following lines:
 
@@ -579,35 +579,6 @@ or you can list all open ports through the lsof command (i do this):
 ```
 sudo lsof -n -P | grep LISTEN
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -643,7 +614,7 @@ sudo rm -r /var/lib/mongodb
 ## 6- Configure UFW and Add MongoDB Port to Rules
 ----------------------------------------------------------------------------------------
 
-Uncomplicated Firewall (UFW), is a front-end to iptables. Its main goal is to make managing your firewall drop-dead simple and to provide an easy-to-use interface.
+**Uncomplicated Firewall (UFW), is a front-end to iptables. Its main goal is to make managing your firewall drop-dead simple and to provide an easy-to-use interface.**
 
 Install UFW:
 
@@ -677,7 +648,7 @@ sudo ufw enable
 sudo ufw status
 ```
 
-which now should retutn the follow:
+which now should return the follow:
 ```
 Status: active
 
@@ -724,7 +695,7 @@ However, because you have to enable authentication, you might run into issues wh
 sudo nano /etc/mongod.conf
 ```
 
-2. Edit `bindIP:` in `net` section with setting below:
+2. Edit `bindIP:` in `net:` section with setting below:
 ```
 net:
   port: 27017
@@ -740,7 +711,7 @@ More on bindIp; [MongoDB bindIp Configurations](https://docs.mongodb.com/manual/
 sudo service mongod restart
 ```
 
-4. Bind to all (Step2 Alternative):
+4. Bind to all (Step 2 Alternative):
 
 If you still can't acces externally your database, consider bind to all (i my self do so).
 
@@ -751,7 +722,7 @@ net:
   bindIp: 0.0.0.0
 ```
 
-**Warning:** Do not comment out the `bindIp` line without enabling authorization. Otherwise you will be opening up the whole internet to have full admin access to all mongo databases on your MongoDB server!
+**Warning:** Do not allow the `bindIp` line without enabling authorization. Otherwise you will be opening up the whole internet to have full admin access to all mongo databases on your MongoDB server!
 
 
 **Restart mongo service for changes to take effect (step 3).**
@@ -934,33 +905,30 @@ sudo nginx -s stop  — fast shutdown
 sudo nginx -s quit  — graceful shutdown
 ```
 
-alternatively,
-
-`
-sudo systemctl stop nginx.service
-`
+alternatively, `sudo systemctl stop nginx.service`
 
 * Status of Nginx:
-`
+```
 sudo systemctl status nginx.service  
-`
+```
 
 * Reload Nginx:
+
 If we make changes to the server configuration, simply reload the nginx without dropping connection. Use the following command to reload the server.
 
-`
+```
 sudo nginx -s reload
-`
+```
 
 * Disable Nginx at Booting:
-`
+```
 sudo systemctl disable nginx.service
-`
+```
 
 * Enable Nginx at Booting:
-`
+```
 sudo systemctl enable nginx.service  
-`
+```
 
 <br>
 
@@ -1043,7 +1011,7 @@ app.configure('production', () => {
 
 <br>
 
-## 9- Setup NGINX
+## 9- Configure NGINX
 ----------------------------------------------------------------------------------------
 
 
