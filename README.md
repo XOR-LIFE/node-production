@@ -7,10 +7,11 @@ The following instructions are based on **Ubuntu**, the steps are the same for w
 <br>
 
 ## 1- Install NodeJS and NPM.
+----------------------------------------------------------------------------------------
 
 There are several ways to install node.js
 
- **1. Ubuntu Packages:**
+ **1. Ubuntu Repository:**
 Not recommended at all because Ubuntu sucks at keeping their packages updated.
 
  **2. NodeSource Repository:**
@@ -27,7 +28,7 @@ Based on the previous methods, I'll go with the second option.
 
 1. Update your Ubuntu:
 ```
-sudo apt update && sudo apt upgrade
+sudo apt update && sudo apt upgrade -y
 ```
 
 2. Install important packages for node and npm:
@@ -318,6 +319,7 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 <br>
 
 ## 4- Install and Configure MongoDB
+----------------------------------------------------------------------------------------
 
 **MongoDB is a well-known NoSQL database that offers high performance, high availability and automatic scaling. It differs from RDBMS such as MySQL, PostgreSQL and SQLite because it does not use SQL to set and retrieve data. MongoDB stores data in `documents` called BSON (binary representation of JSON with additional information). MongoDB is only available for the 64-bit long-term support Ubuntu release.**
 
@@ -326,10 +328,10 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 There are two ways to install MongoDB
 
- **1. Ubuntu Packages:**
+ **1. Ubuntu Repository:**
 Again, Not recommended at all because Ubuntu sucks at keeping their packages updated.
 
- **2. MongoDB Packages:**
+ **2. MongoDB Repository:**
 Latest Version, Very Recommended, Easy to install and Easy to update.
  
 <br>
@@ -439,7 +441,7 @@ sudo service mongod restart
 
 * Disable MongoDB from auto start on boot
 `
-sudo systemctl disable mongodb
+sudo systemctl disable mongod
 `
 
 <br>
@@ -448,7 +450,7 @@ sudo systemctl disable mongodb
 
 <br>
 
-* **Add A User For The First Time:**
+* **Add Admin User For The First Time:**
 
 1. Open MongoDB shell:
 ```
@@ -466,9 +468,16 @@ db.createUser({user:"admin", pwd:"pass123", roles:[{role:"root", db:"admin"}]})
 ```
 change `pass123` to the password of your choice
 
-3. List all available databases:
+3. To list all available databases:
 ```
 show dbs
+```
+
+4. To list available users:
+```
+use admin
+
+show users
 ```
 
 5. Exit from the MongoDB shell:
@@ -478,31 +487,98 @@ exit
 
 <br>
 
+* **Mongodb Configuration File:**
+
+The configuration file for MongoDB is located at` /etc/mongod.conf`, and is written in **YAML** format. Most of the settings are well commented within the file. We’ve outlined the default options below:
+
+* `dbPath` indicates where the database files will be stored (`/var/lib/mongodb` by default)
+* `systemLog` specifies the various logging options, explained below:
+  * `destination` tells MongoDB whether to store the log output as a file or syslog
+  * `logAppend` specifies whether to append new entries to the end of an existing log when the daemon restarts (as opposed to creating a backup and starting a new log upon restarting)
+  * `path` tells the daemon where to send its logging information (`/var/log/mongodb/mongod.log` by default)
+* `net` specifies the various network options, explained below:
+  * `port` is the port on which the MongoDB daemon will run
+  * `bindIP` specifies the IP addresses MongoDB to which binds, so it can listen for connections from other applications
+
+These are only a few basic configuration options that are set by default.
+
+For more information on how to customize these and other values in your configuration file, refer to the [official MongoDB configuration tutorial](https://docs.mongodb.com/manual/reference/configuration-options/).
+
+**Note: upon making any change to the MongoDB configuration file, you would need to restart the mongodb service so that change would take effect.**
+
+<br>
+
 * **Enable MongoDB authentication:**
 
-1. Edit the mongodb service file `/lib/systemd/system/mongod.service` with your editor.
+1. Edit the mongodb service file `/etc/mongod.conf` with your editor.
+
+The default configuration settings are sufficient for most users. However, for production environments, it is recommended to uncomment the security section and enable authorization as shown below:
+
+In the `#security` section, remove the hash `#` sign in front of security to enable the section then add authorization role and set it to enabled.
 ```
-sudo nano /lib/systemd/system/mongod.service
+security:
+  authorization: enabled
 ```
 
-2. On the 'ExecStart' line 10, add the new option `--auth` before `--config` to be like this:
-```
-ExecStart=/usr/bin/mongod --auth --config /etc/mongod.conf
-```
-Save the service file and exit
+**YAML does not support tab characters for indentation: use spaces instead.**
 
-3. Reload the systemd service:
-```
-sudo systemctl daemon-reload
+The authorization option enables [Role-Based Access Control (RBAC)](https://docs.mongodb.com/manual/core/authorization/) that regulates users access to database resources and operations. If this option is disabled each user will have access to all databases and perform any action.
 
+2. Reload the systemd service:
+```
 sudo service mongod restart
 ```
 
-4. And connect to the MongoDB shell with this command:
+3. Now check that authorization work by connecting to mongo shell and try to lit databases
+```
+mongo
+```
+
+then try to list database
+```
+show dbs
+```
+
+if you got nothing as a result or connection failed that means that authorization now works successfully.
+
+4. Now to connect to MongoDB shell you need to use this command:
 ```
 mongo -u admin -p pass123 --authenticationDatabase admin
 ```
 And you should see the mongo shell, type `exit` and run.
+
+<br>
+
+* **Change MongoDB Deafult Port:**
+
+You can specify mongod’s listening port by setting it in the mongodb configuration file.
+
+Open `/etc/mongod.conf` with your favorite code editor and search for the following lines:
+
+```
+net:
+  port: 27017
+```
+
+Now change the port number to any other of your choice, save and reload `mongod`:
+```
+sudo service mongod restart
+```
+
+**Please take into account that the chosen port needs to be equal or greater than 1000 and must not be taken by any other service running in the same host. You can check if a certain port is already in use with the nc command:**
+```
+$ sudo nc -l 3000
+nc: Address already in use
+
+$ sudo nc -l 23456
+Listening on [0.0.0.0] (family 0, port 23456)
+^C
+```
+
+or you can list all open ports through the lsof command (i do this):
+```
+sudo lsof -n -P | grep LISTEN
+```
 
 
 
@@ -556,6 +632,7 @@ sudo rm -r /var/lib/mongodb
 
 
 **Finally:** 
+* **[MongoDB User Credentials and Security Best Practices](https://medium.com/mongoaudit/mongodb-user-credentials-best-practices-9fa6de06bcc1)**
 * **[MongoDB Production Notes](https://docs.mongodb.com/manual/administration/production-notes/)**
 * **[MongoDB Security Checklist](https://docs.mongodb.com/manual/administration/security-checklist/)**
 
@@ -563,7 +640,128 @@ sudo rm -r /var/lib/mongodb
 
 <br>
 
-## 5- Install Nginx
+## 6- Configure UFW and Add MongoDB Port to Rules
+----------------------------------------------------------------------------------------
+
+Uncomplicated Firewall (UFW), is a front-end to iptables. Its main goal is to make managing your firewall drop-dead simple and to provide an easy-to-use interface.
+
+Install UFW:
+
+1. Install UFW:
+```
+sudo apt-get install ufw -y
+```
+
+2. Check UFW status:
+```
+sudo ufw status
+```
+
+3. Ensure to allow SSH:
+```
+sudo ufw allow OpenSSH
+```
+
+4. If you use VNC to connect to your machine, make sure to also open its corresponding port (its 5900 in my case, i use RealVNC):
+```
+sudo ufw allow 5900
+```
+
+5. Enable UFW, because it's probably inactive:
+```
+sudo ufw enable
+```
+
+6. Rerun the UFW status command:
+```
+sudo ufw status
+```
+
+which now should retutn the follow:
+```
+Status: active
+
+To                         Action      From
+--                         ------      ----                              
+OpenSSH                    ALLOW       Anywhere                        
+5900                       ALLOW       Anywhere
+OpenSSH (v6)               ALLOW       Anywhere (v6)
+5900 (v6)                  ALLOW       Anywhere (v6)
+```
+
+7. Allow access to the default MongoDB port `27017`:
+```
+sudo ufw allow 27017
+```
+
+8. Check UFW status:
+```
+sudo ufw status
+```
+
+which returns
+```
+To                         Action      From
+--                         ------      ----
+OpenSSH                    ALLOW       Anywhere
+27017                      ALLOW       Anywhere
+OpenSSH (v6)               ALLOW       Anywhere (v6)
+27017 (v6)                 ALLOW       Anywhere (v6)
+```
+
+<br>
+
+* **Allow External Access To MongoDB**
+ 
+Right now we have configured UFW to allow external access to our machine with Mongo port, but still, Mongo itself isn't configured for external access. even though the default port is open, the database server is currently listening on 127.0.0.1. To permit remote connections, you must include a publicly-routed IP address for your server to `mongo.conf` file.
+
+By default, MongoDB authorizes all logs from the local machine. There are no problems while the application is developing.
+
+However, because you have to enable authentication, you might run into issues when the application is ready and you have to deploy it, So you need to configure it.
+
+1. Allow remote connections, to bind MongoDB to all network interfaces open the config file `/etc/mongod.conf`:
+```
+sudo nano /etc/mongod.conf
+```
+
+2. Edit `bindIP:` in `net` section with setting below:
+```
+net:
+  port: 27017
+  bindIp: 127.0.0.1,your_vps_ip
+```
+
+A comma should be placed before adding the IP address you want to allow. Once that is done, Save the changes and exit the editor.
+
+More on bindIp; [MongoDB bindIp Configurations](https://docs.mongodb.com/manual/reference/configuration-options/#net.bindIp)
+
+3. Restart mongodb:
+```
+sudo service mongod restart
+```
+
+4. Bind to all (Step2 Alternative):
+
+If you still can't acces externally your database, consider bind to all (i my self do so).
+
+* Replace `127.0.0.1` with `0.0.0.0`
+```
+net:
+  port: 27017
+  bindIp: 0.0.0.0
+```
+
+**Warning:** Do not comment out the `bindIp` line without enabling authorization. Otherwise you will be opening up the whole internet to have full admin access to all mongo databases on your MongoDB server!
+
+
+**Restart mongo service for changes to take effect (step 3).**
+
+----------------------------------------------------------------------------------------
+
+<br>
+
+## 7- Install Nginx
+----------------------------------------------------------------------------------------
 
 **Nginx** is one of the most renowned open source amongst the web servers on the planet. It is also in charge of serving more than half of the activity on the web. It is equipped for taking care of assorted workloads and working with other programming languages to give a total web stack. Nginx is distinguished as the most effective and light-weight web server today.
 
@@ -619,10 +817,10 @@ In those situations, usually, node.js will still be performing the functions of 
 
 There are two ways to install NGINX
 
- **1. Ubuntu Packages:**
+ **1. Ubuntu Repository:**
 Again, Not recommended at all because Ubuntu sucks at keeping their packages updated.
 
- **2. NGINX Packages:**
+ **2. NGINX Repository:**
 Latest Version, Very Recommended, Easy to install and Easy to update.
 
 <br>
@@ -699,7 +897,7 @@ HTTP/1.1 200 OK
 Server: nginx/1.13.8
 ```
 
-You can also open your browser and navigate to your IP address to see default NGINX page. That is an indicator that NGINX is up and running.
+You can also open your browser and navigate to your VPS-IP-address to see default NGINX page.
 
 **Congratulations, Now your server is up and running very well.**
 
@@ -709,7 +907,7 @@ You can also open your browser and navigate to your IP address to see default NG
 sudo systemctl is-enabled nginx.service
 ```
 
-And you should get `enabled` as output. If you didn't, then go to step **10**.
+And you should get `enabled` as output. If you didn't, then:
 
 
 10. Enable Nginx to start on boot and start Nginx immediately:
@@ -720,11 +918,74 @@ sudo systemctl enable nginx.service
 sudo systemctl start nginx.service
 ```
 
+<br>
+
+ **How to Manage Nginx Service**
+
+* Start Nginx:
+`
+sudo systemctl start nginx.service
+`
+
+* Stop Nginx:
+```
+sudo nginx -s stop  — fast shutdown
+
+sudo nginx -s quit  — graceful shutdown
+```
+
+alternatively,
+
+`
+sudo systemctl stop nginx.service
+`
+
+* Status of Nginx:
+`
+sudo systemctl status nginx.service  
+`
+
+* Reload Nginx:
+If we make changes to the server configuration, simply reload the nginx without dropping connection. Use the following command to reload the server.
+
+`
+sudo nginx -s reload
+`
+
+* Disable Nginx at Booting:
+`
+sudo systemctl disable nginx.service
+`
+
+* Enable Nginx at Booting:
+`
+sudo systemctl enable nginx.service  
+`
+
+<br>
+
+**Extra Info:**
+
+**`/usr/share/nginx/html/`** The basic static site. You can edit the default `index.html` file or drop your own file in this folder and it will be instantly visible.
+
+**`/etc/nginx/`** Contains all Nginx configuration files. The primary configuration file is `/etc/nginx/nginx.conf`.
+
+**`/var/log/nginx/access.log`** is a server log file that contains records of all request.
+
+**`/var/log/nginx/error.log`** is a server error log file that contains error records.
+
+
+
+
+
+
+<br>
+
 ----------------------------------------------------------------------------------------
 
 <br>
 
-## 6- Adjust Your Node Application for Production
+## 8- Adjust Your Node Application for Production
 
 **This Tutorial Is Taken From [Flavio Copes Website](https://flaviocopes.com/node-difference-dev-prod/)**
 
@@ -782,7 +1043,7 @@ app.configure('production', () => {
 
 <br>
 
-## 7- Setup NGINX
+## 9- Setup NGINX
 ----------------------------------------------------------------------------------------
 
 
