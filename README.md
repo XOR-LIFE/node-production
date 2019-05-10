@@ -555,7 +555,9 @@ sudo rm -r /var/lib/mongodb
 
 
 
-**Finally, [MongoDB Production Notes](https://docs.mongodb.com/manual/administration/production-notes/)**
+**Finally:** 
+* **[MongoDB Production Notes](https://docs.mongodb.com/manual/administration/production-notes/)**
+* **[MongoDB Security Checklist](https://docs.mongodb.com/manual/administration/security-checklist/)**
 
 ----------------------------------------------------------------------------------------
 
@@ -699,7 +701,7 @@ Server: nginx/1.13.8
 
 You can also open your browser and navigate to your IP address to see default NGINX page. That is an indicator that NGINX is up and running.
 
-**Congratulations, Now you server is up and running very well.**
+**Congratulations, Now your server is up and running very well.**
 
 9. By default Nginx is now configured to run after a reboot, to check that use:
 
@@ -724,7 +726,9 @@ sudo systemctl start nginx.service
 
 ## 6- Adjust Your Node Application for Production
 
-**This tutorial is taken from [Flavio Copes Website](https://flaviocopes.com/node-difference-dev-prod/)**
+**This Tutorial Is Taken From [Flavio Copes Website](https://flaviocopes.com/node-difference-dev-prod/)**
+
+<br>
 
 You can have different configurations for production and development environments.
 
