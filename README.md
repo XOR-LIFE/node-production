@@ -150,7 +150,7 @@ pm2 start app.js  – Starts a specific application
 
 Your app is now daemonized, monitored, forever alive, auto-restarting after crashes and machine restarts – all with one simple command
 
-You can also Start your application and give it a name in the PM2 list, if you run several applications and "index.js/app.js" might confuse you
+You can also Start your application and give it a name in the PM2 list if you run several applications and "index.js/app.js" might confuse you
 
 ```
 pm2 start app.js --name="Shop App"
@@ -212,7 +212,7 @@ pm2 reload <all|app_name>  – Reloads the app configuration (this comes in hand
 
 #### Terminal Based Monitoring:
 
-To monitor logs, custom metrics and information abouut your application’s health. For example, you’ll see CPU utilization, memory usage, requests/minute, and more!
+To monitor logs, custom metrics and information about your application’s health. For example, you’ll see CPU utilization, memory usage, requests/minute, and more!
 
 ```
 pm2 monit
@@ -321,7 +321,7 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 ## 4- Install and Configure MongoDB
 ----------------------------------------------------------------------------------------
 
-**MongoDB is a well-known NoSQL database that offers high performance, high availability and automatic scaling. It differs from RDBMS such as MySQL, PostgreSQL and SQLite because it does not use SQL to set and retrieve data. MongoDB stores data in `documents` called BSON (binary representation of JSON with additional information). MongoDB is only available for the 64-bit long-term support Ubuntu release.**
+**MongoDB is a well-known NoSQL database that offers high performance, high availability and automatic scaling. It differs from RDBMS such as MySQL, PostgreSQL, and SQLite because it does not use SQL to set and retrieve data. MongoDB stores data in `documents` called BSON (binary representation of JSON with additional information). MongoDB is only available for the 64-bit long-term support Ubuntu release.**
 
 
 ### Step 1: Install MongoDB
@@ -405,7 +405,7 @@ sudo apt-get install -y mongodb-org
 mongod --version
 ```
 
-6. Start MongoDB and make it auto start at reboot:
+6. Start MongoDB and make it autostart at reboot:
 ```
 sudo service mongod start
 
@@ -439,7 +439,7 @@ sudo service mongod stop
 sudo service mongod restart
 `
 
-* Disable MongoDB from auto start on boot
+* Disable MongoDB from autostart on boot
 `
 sudo systemctl disable mongod
 `
@@ -489,7 +489,7 @@ exit
 
 * **Mongodb Configuration File:**
 
-The configuration file for MongoDB is located at` /etc/mongod.conf`, and is written in **YAML** format. Most of the settings are well commented within the file. Here is some outlined default options below:
+The configuration file for MongoDB is located at` /etc/mongod.conf`, and is written in **YAML** format. Most of the settings are well commented within the file. Here are some outlined default options below:
 
 * `dbPath` indicates where the database files will be stored (`/var/lib/mongodb` by default)
 * `systemLog` specifies the various logging options, explained below:
@@ -504,7 +504,7 @@ These are only a few basic configuration options that are set by default.
 
 For more information on how to customize these and other values in your configuration file, refer to the [official MongoDB configuration tutorial](https://docs.mongodb.com/manual/reference/configuration-options/).
 
-**Note: upon making any change to the MongoDB configuration file, you would need to restart the mongodb service so that change would take effect.**
+**Note: upon making any change to the MongoDB configuration file, you would need to restart the mongodb service so that changes would take effect.**
 
 <br>
 
@@ -529,7 +529,7 @@ The authorization option enables [Role-Based Access Control (RBAC)](https://docs
 sudo service mongod restart
 ```
 
-3. Now check that authorization work by connecting to mongo shell and try to lit databases
+3. Now check that authorization work by connecting to mongo shell and try to list databases
 ```
 mongo
 ```
@@ -549,9 +549,9 @@ And you should see the mongo shell, type `exit` and run.
 
 <br>
 
-* **Change MongoDB Deafult Port:**
+* **Change MongoDB Default Port:**
 
-This is an optional thing to do, if you intend, You can specify mongod’s listening port by setting it in the mongodb configuration file.
+This is an optional thing to do, if you intend, You can specify mongod’s listening port by specifying it in the mongodb configuration file.
 
 Open `/etc/mongod.conf` with your favorite code editor and search for the following lines:
 
@@ -611,7 +611,7 @@ sudo rm -r /var/lib/mongodb
 
 <br>
 
-## 6- Configure UFW and Add MongoDB Port to Rules
+## 5- Configure UFW and Add MongoDB Port to Rules
 ----------------------------------------------------------------------------------------
 
 **Uncomplicated Firewall (UFW), is a front-end to iptables. Its main goal is to make managing your firewall drop-dead simple and to provide an easy-to-use interface.**
@@ -633,7 +633,7 @@ sudo ufw status
 sudo ufw allow OpenSSH
 ```
 
-4. If you use VNC to connect to your machine, make sure to also open its corresponding port (its 5900 in my case, i use RealVNC):
+4. If you use VNC to connect to your machine, make sure to also open its corresponding port (Its 5900 in my case, I use RealVNC):
 ```
 sudo ufw allow 5900
 ```
@@ -648,7 +648,7 @@ sudo ufw enable
 sudo ufw status
 ```
 
-which now should return the follow:
+which now should return the following:
 ```
 Status: active
 
@@ -713,7 +713,7 @@ sudo service mongod restart
 
 4. Bind to all (Step 2 Alternative):
 
-If you still can't acces externally your database, consider bind to all (i my self do so).
+If you still can't access externally your database, consider bind to all (I, my self do so).
 
 * Replace `127.0.0.1` with `0.0.0.0`
 ```
@@ -722,7 +722,7 @@ net:
   bindIp: 0.0.0.0
 ```
 
-**Warning:** Do not allow the `bindIp` line without enabling authorization. Otherwise you will be opening up the whole internet to have full admin access to all mongo databases on your MongoDB server!
+**Warning:** Do not allow the `bindIp` without enabling authorization. Otherwise you will be opening up the whole internet to have full admin access to all mongo databases on your MongoDB server!
 
 
 **Restart mongo service for changes to take effect (step 3).**
@@ -731,7 +731,7 @@ net:
 
 <br>
 
-## 7- Install Nginx
+## 6- Install Nginx
 ----------------------------------------------------------------------------------------
 
 **Nginx** is one of the most renowned open source amongst the web servers on the planet. It is also in charge of serving more than half of the activity on the web. It is equipped for taking care of assorted workloads and working with other programming languages to give a total web stack. Nginx is distinguished as the most effective and light-weight web server today.
@@ -800,7 +800,7 @@ Based on the previous methods, I'll go with the second option.
 
 <br>
 
-First, you need to know that NGINX Open Source is available in two versions:
+First, you need to know that NGINX Open Source is available in two versions (According to NGINX):
 
 * **Mainline** – Includes the latest features and bug fixes and is always up to date. It is reliable, but it may include some experimental modules, and it may also have some number of new bugs.
 * **Stable** – Doesn’t include all of the latest features, but has critical bug fixes that are always backported to the mainline version. We recommend the stable version for production servers.
@@ -813,7 +813,7 @@ First, you need to know that NGINX Open Source is available in two versions:
 
 1. Install the prerequisites:
 ```
-sudo apt install curl gnupg2 ca-certificates lsb-release
+sudo apt install curl gnupg2 ca-certificates lsb-release -y
 ```
 
 2. Set up the apt repository:
@@ -830,7 +830,7 @@ echo "deb http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx" \ |
 
 **I Personally go with the stable version, Also Nginx recommends the stable version for production.**
 
-3. import official nginx signing key so apt could verify the packages authenticity:
+3. Import official nginx signing key so apt could verify the packages authenticity:
 ```
 curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
 ```
@@ -868,7 +868,7 @@ HTTP/1.1 200 OK
 Server: nginx/1.13.8
 ```
 
-You can also open your browser and navigate to your VPS-IP-address to see default NGINX page.
+You can also open your browser and navigate to your VPS-IP-Address to see the default NGINX page.
 
 **Congratulations, Now your server is up and running very well.**
 
@@ -894,9 +894,9 @@ sudo systemctl start nginx.service
  **How to Manage Nginx Service**
 
 * Start Nginx:
-`
+````
 sudo systemctl start nginx.service
-`
+````
 
 * Stop Nginx:
 ```
@@ -953,7 +953,7 @@ sudo systemctl enable nginx.service
 
 <br>
 
-## 8- Adjust Your Node Application for Production
+## 7- Adjust Your Node Application for Production
 
 **This Tutorial Is Taken From [Flavio Copes Website](https://flaviocopes.com/node-difference-dev-prod/)**
 
@@ -1011,7 +1011,7 @@ app.configure('production', () => {
 
 <br>
 
-## 9- Configure NGINX
+## 8- Configure NGINX
 ----------------------------------------------------------------------------------------
 
 
