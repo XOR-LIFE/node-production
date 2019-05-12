@@ -98,6 +98,8 @@ cd Downloads
 4. Install .deb package using `sudo dpkg –i`
 ```
 sudo dpkg –i packagename.deb
+
+sudo apt-get install -f
 ```
 
 5. Run subscription wizard so you could log in with your home subscription account
@@ -118,6 +120,8 @@ sudo systemctl enable vncserver-x11-serviced.service
 ```
 https://www.realvnc.com/en/connect/download/viewer/
 ```
+
+**If you had the error "Cannot currently show the desktop", then click this link to know how to fix it. [Disable Wayland and enable Xorg display](https://linuxconfig.org/how-to-disable-wayland-and-enable-xorg-display-server-on-ubuntu-18-04-bionic-beaver-linux)**
 
 <br>
 
