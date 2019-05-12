@@ -4,12 +4,12 @@
 The following instructions are based on **Ubuntu**, the steps are the same for whatever Linux distribution you are going to use but the commands might be different.
 ----------------------------------------------------------------------------------------
 
-## Enable SSH, SFTP and VNC
+## Setup Your VPS
 ----------------------------------------------------------------------------------------
 
-Before we begin you need to make sure that you have an SSH connection so you can login to your VPS machine.
-
 ### **Install OpenSSH**
+
+Before we begin you need to make sure that you have an SSH connection so you can login to your VPS machine.
 
 ```
 sudo apt update
@@ -82,7 +82,7 @@ RealVNC consists of two products, Server and Viewer.
 
 1. Register a free account of RealVNC from the link below
 ```
-https://manage.realvnc.com/en/auth
+https://manage.realvnc.com/en/
 ```
 
 2. Download VNC Server from the link below and choose `DEB x64`
@@ -118,6 +118,31 @@ sudo systemctl enable vncserver-x11-serviced.service
 ```
 https://www.realvnc.com/en/connect/download/viewer/
 ```
+
+<br>
+
+### **Install Git**
+
+Git is a de-facto standard for distributed version control systems and is used by the majority of developers nowadays. It allows you to keep track of your code changes, revert to previous stages, create branches and to collaborate with your fellow developers.
+
+1. Add PPA to source list
+```
+sudo add-apt-repository ppa:git-core/ppa
+```
+
+2. Update package list and install Git
+```
+sudo apt update
+
+sudo apt install git
+```
+
+3. Validate installation and check for version
+```
+git --version
+```
+
+<br>
 
 ----------------------------------------------------------------------------------------
 
