@@ -4,9 +4,126 @@
 The following instructions are based on **Ubuntu**, the steps are the same for whatever Linux distribution you are going to use but the commands might be different.
 ----------------------------------------------------------------------------------------
 
+## Enable SSH, SFTP and VNC
+----------------------------------------------------------------------------------------
+
+Before we begin you need to make sure that you have an SSH connection so you can login to your VPS machine.
+
+* **Install OpenSSH**
+
+```
+sudo apt update
+
+sudo apt install openssh-server -y
+```
+
+Once the installation is completed, the SSH service will start automatically, type the following command to show the SSH server status
+```
+sudo systemctl status ssh
+```
+
+And you should now see **Active: active (running)**, Press `q` to get back to the command line prompt.
+
+If not running enable the ssh server and start it as follows:
+```
+sudo systemctl enable ssh
+
+sudo systemctl start ssh
+```
+
+You can now connect to your machine through SSH using, for example [PuTTY](www.putty.org).
+
 <br>
 
-## 1- Install NodeJS and NPM.
+* **Enable SFTP**
+
+Secure File Transfer Protocol or **SFTP** is a network protocol that provides file access, file transfer, and file management over any reliable data stream.
+
+SFTP has pretty much replaced legacy FTP as a file transfer protocol and is quickly replacing FTP/S. It provides all the functionality offered by these protocols, but more securely and more reliably, with easier configuration. There is basically no reason to use legacy protocols anymore.
+
+SFTP also protects against password sniffing and man-in-the-middle attacks. It protects the integrity of the data using encryption and cryptographic hash functions and authenticates both the server and the user.
+
+SFTP uses the same port used by SSH so you would need nothing more to install if you have already enabled SSH in your machine.
+
+All that you need is just an application to connect to your machine through SFTP.
+
+I recommend those two applications and you can use what you want.
+
+* **FileZilla Client:** a cross-platform FTP, SFTP, and FTPS client with a vast list of features, which supports Windows, Mac OS X, Linux, and more.
+
+Download from here: [FileZilla Client Download](https://filezilla-project.org/download.php?type=client)
+
+* **Bitvise SSH Client (Windows Only):** Free and flexible SSH Client for Windows includes state of the art terminal emulation, graphical as well as command-line SFTP support, an FTP-to-SFTP bridge, powerful tunneling features including dynamic port forwarding through an integrated proxy, and remote administration for our SSH Server.
+
+Download from here: [Bitvise SSH Client Download](https://www.bitvise.com/ssh-client-download)
+
+<br>
+
+* **Enable VNC**
+
+Even though this is not necessary if you are going to interact with your machine through commands all the time (SSH), but you might need to connect to your machine through VNC for any reason and access the GUI version due to simplicity.
+
+If you installed **Ubuntu Server** on your machine then having VNC is _Useless_, unless you are going to install a GUI/Desktop on your Ubuntu Server. And if you want so then I suggest going with [Lubuntu Core Server Desktop](https://linuxconfig.org/install-gui-on-ubuntu-server-18-04-bionic-beaver#h7-2-lubuntu-core-server-desktop)
+
+<br>
+
+**Which VNC application is better ??**
+
+I've tried **All** VNC applications and I can tell you that **RealVNC** is the best VNC application with no doubt.
+
+RealVNC consists of two products, Server and Viewer.
+
+* RealVNC Server: Download to the remote computer you want to control (This is to be downloaded on you VPS machine).
+* RealVNC Viewer: Download to the local computer or mobile device you want to control from.
+
+<br>
+
+**Now,** Let's start installing RealVNC.
+
+1. Register a free account of RealVNC from the link below
+```
+https://manage.realvnc.com/en/auth
+```
+
+2. Download VNC Server from the link below and choose `DEB x64`
+```
+https://www.realvnc.com/en/connect/download/vnc/linux/
+```
+
+3. `cd` to the folder which RealVNC was download, It's Downloads in my case
+```
+cd Downloads
+```
+
+4. Install .deb package using `sudo dpkg –i`
+```
+sudo dpkg –i packagename.deb
+```
+
+5. Run subscription wizard so you could log in with your home subscription account
+```
+vnclicensewiz
+```
+This will launch the wizard and you just need to log in with your RealVNC credentials. You will also need root password when requested.
+
+6. Start RealVNC and Enable it on boot
+```
+sudo systemctl start vncserver-x11-serviced.service
+
+sudo systemctl enable vncserver-x11-serviced.service
+```
+**Installation is now finished.**
+
+* You can now install RealVNC Viewer on your controller machine from the wide list of supported machines.
+```
+https://www.realvnc.com/en/connect/download/viewer/
+```
+
+----------------------------------------------------------------------------------------
+
+<br>
+
+## 1- Install NodeJS and NPM
 ----------------------------------------------------------------------------------------
 
 There are several ways to install node.js
@@ -74,7 +191,7 @@ sudo apt purge nodejs npm
 
 <br>
 
-## 2- Create a Node App With Express Server (Testing).
+## 2- Create a Node App With Express Server (Testing)
 ----------------------------------------------------------------------------------------
 
 * Since you’ve already installed Node.js, create a directory to hold your application, and make it your working directory:
@@ -580,8 +697,33 @@ or you can list all open ports through the lsof command (i do this):
 sudo lsof -n -P | grep LISTEN
 ```
 
+<br>
+
+* **Securing MongoDB from Injection Attacks:**
+
+All of the following MongoDB operations permit you to run arbitrary JavaScript expressions directly on the server:
+
+* $where
+* mapReduce
+* group
+
+These methods can be really convenient, but they pose a huge security risk to your database integrity if your application does not sanitize and escape user-provided values properly.
+
+Indeed, **you can express most queries in MongoDB without JavaScript**, so the most sensible option is to completely disable server-side Javascript.
+
+**Open** `/etc/mongod.conf` with your favorite code editor and look for the security section:
+```
+security:
+    authorization: enabled
+```
+
+Make sure to add the following line inside the security section:
+```
+    javascriptEnabled: false
+```
 
 
+<br>
 
 ## Uninstall MongoDB
 
