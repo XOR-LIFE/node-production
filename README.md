@@ -884,7 +884,7 @@ sudo service mongod restart
 
 4. Bind to all (Step 2 Alternative):
 
-If you still can't access externally your database, consider bind to all (I, my self do so).
+If you still can't access externally your database, consider bind to all (I don't recommend it unless you have problems connecting).
 
 * Replace `127.0.0.1` with `0.0.0.0`
 ```
@@ -897,6 +897,13 @@ net:
 
 
 **Restart mongo service for changes to take effect (step 3).**
+
+<br>
+
+**Finally:**
+* **[How to Configure Firewall, Whitelist and Blacklist in a self-hosted MongoDB server](https://medium.com/mongoaudit/how-to-configure-firewall-whitelist-and-blacklist-in-a-self-hosted-mongodb-server-9a898c6df675)**
+
+<br>
 
 ----------------------------------------------------------------------------------------
 
