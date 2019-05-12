@@ -9,7 +9,7 @@ The following instructions are based on **Ubuntu**, the steps are the same for w
 
 Before we begin you need to make sure that you have an SSH connection so you can login to your VPS machine.
 
-* **Install OpenSSH**
+### **Install OpenSSH**
 
 ```
 sudo apt update
@@ -35,7 +35,7 @@ You can now connect to your machine through SSH using, for example [PuTTY](www.p
 
 <br>
 
-* **Enable SFTP**
+### **Enable SFTP**
 
 Secure File Transfer Protocol or **SFTP** is a network protocol that provides file access, file transfer, and file management over any reliable data stream.
 
@@ -59,7 +59,7 @@ Download from here: [Bitvise SSH Client Download](https://www.bitvise.com/ssh-cl
 
 <br>
 
-* **Enable VNC**
+### **Enable VNC**
 
 Even though this is not necessary if you are going to interact with your machine through commands all the time (SSH), but you might need to connect to your machine through VNC for any reason and access the GUI version due to simplicity.
 
