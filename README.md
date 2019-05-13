@@ -4,7 +4,7 @@
 The following instructions are based on **Ubuntu**, the steps are the same for whatever Linux distribution you are going to use but the commands might be different.
 ----------------------------------------------------------------------------------------
 
-## Setup Your VPS
+## Set up Your VPS
 ----------------------------------------------------------------------------------------
 
 ### **Install OpenSSH**
@@ -116,7 +116,7 @@ sudo systemctl enable vncserver-x11-serviced.service
 ```
 **Installation is now finished.**
 
-* You can now install RealVNC Viewer on your controller machine from the wide list of supported machines.
+* You can now install RealVNC Viewer from the wide list of supported devices on your controller machine to access and controll your machine.
 ```
 https://www.realvnc.com/en/connect/download/viewer/
 ```
@@ -689,9 +689,12 @@ if you got nothing as a result or connection failed that means that authorizatio
 
 4. Now to connect to MongoDB shell you need to use this command:
 ```
-mongo -u admin -p pass123 --authenticationDatabase admin
+mongo -u admin -p --authenticationDatabase admin
 ```
-And you should see the mongo shell, type `exit` and run.
+
+And you will be prompted to enter your password, after login type `exit`.
+
+**Note: It is not recommended to enter your password on the command-line because it will be stored in the shell history file and can be viewed later on by an attacker.**
 
 <br>
 
@@ -799,22 +802,31 @@ sudo apt-get install ufw -y
 sudo ufw status
 ```
 
+And you should get the result `Status: inactive`
+
 3. Ensure to allow SSH:
 ```
 sudo ufw allow OpenSSH
 ```
 
-4. If you use VNC to connect to your machine, make sure to also open its corresponding port (Its 5900 in my case, I use RealVNC):
+4. **Allow ports 80, 443 for people to be able to access your website through HTTP and HTTPS (Very Important)**
+```
+sudo ufw allow http
+
+sudo ufw allow https
+```
+
+5. If you use VNC to connect to your machine, make sure to also open its corresponding port (Its 5900 in my case, I use RealVNC):
 ```
 sudo ufw allow 5900
 ```
 
-5. Enable UFW, because it's probably inactive:
+6. Enable UFW, because it's probably inactive:
 ```
 sudo ufw enable
 ```
 
-6. Rerun the UFW status command:
+7. Rerun the UFW status command:
 ```
 sudo ufw status
 ```
@@ -831,12 +843,12 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 5900 (v6)                  ALLOW       Anywhere (v6)
 ```
 
-7. Allow access to the default MongoDB port `27017`:
+8. Allow access to the default MongoDB port `27017`:
 ```
 sudo ufw allow 27017
 ```
 
-8. Check UFW status:
+9. Check UFW status:
 ```
 sudo ufw status
 ```
@@ -912,7 +924,7 @@ net:
 ## 6- Install Nginx
 ----------------------------------------------------------------------------------------
 
-**Nginx** is one of the most renowned open source amongst the web servers on the planet. It is also in charge of serving more than half of the activity on the web. It is equipped for taking care of assorted workloads and working with other programming languages to give a total web stack. Nginx is distinguished as the most effective and light-weight web server today.
+**Nginx** (pronounced "engine x"), is one of the most renowned open source amongst the web servers on the planet. It is also in charge of serving more than half of the activity on the web. It is equipped for taking care of assorted workloads and working with other programming languages to give a total web stack. Nginx is distinguished as the most effective and light-weight web server today.
 
 HTTP proxies are commonly used with web applications for gzip encoding, static file serving, HTTP caching, SSL handling, load balancing, and spoon feeding clients. Using Nginx to handle static content and proxying requests to your scripts to the actual interpreter is better.
 
@@ -1114,6 +1126,8 @@ sudo systemctl enable nginx.service
 
 **`/usr/share/nginx/html/`** The basic static site. You can edit the default `index.html` file or drop your own file in this folder and it will be instantly visible.
 
+**`/var/www/html/`** is the server root directory.
+
 **`/etc/nginx/`** Contains all Nginx configuration files. The primary configuration file is `/etc/nginx/nginx.conf`.
 
 **`/var/log/nginx/access.log`** is a server log file that contains records of all request.
@@ -1191,5 +1205,201 @@ app.configure('production', () => {
 
 ## 8- Configure NGINX
 ----------------------------------------------------------------------------------------
+
+Above work was only child play :smiley:  , This is the part that you really need to worry about. Securing Nginx means securing your website, Configuring Nginx means configuring your website.
+
+<br>
+
+Let's start by doing something easy and important that will get you familiar with the process of editing nginx config files.
+
+What we will do is related to security, we will disable allowing nginx to show its version in the header.
+
+The first thing for a hacker who wants to hack a website is to gather information, whether for social engineering like information about owner, etc.. or technical information like server version, programming language, installed plugins, etc..
+
+This will allow the hacker to look for the version history of the web server or plugin installed on your site and see if any critical vulnerability or security patches have been made so he can use it, That's why you ALWAYS need to keep everything on your website/machine UP-TO-DATE.
+
+* **Hide Nginx Server Version:**
+
+This will show you how to hide Nginx server version on error pages and in the “Server HTTP” response header field. This is one of the keys recommended practices in securing your Nginx HTTP and proxy server.
+
+1. Check that your nginx server version is available to public.
+```
+curl -I Your-Server-IP-or-domain
+```
+
+and you would receive something like this.
+```
+HTTP/1.1 200 OK
+Server: nginx/1.16.0
+Date: Mon, 13 May 2019 17:39:16 GMT
+Content-Type: text/html
+Content-Length: 612
+Last-Modified: Tue, 23 Apr 2019 10:18:21 GMT
+Connection: keep-alive
+ETag: "5cbee66d-264"
+Accept-Ranges: bytes
+```
+
+As you can see in the second line `nginx/1.16.0`
+
+To disable this, you need to turn off the server_tokens directive in `/etc/nginx/nginx.conf` configuration file.
+
+2. open `/etc/nginx/nginx.conf` with your preferred editor
+```
+sudo nano /etc/nginx/nginx.conf
+```
+3. Add the following line `server_tokens off;` to the `http` section shown in the screenshot below.
+
+![](https://i.ibb.co/ryg3wSL/server-tokens.jpg)
+
+4. Save the file and restart Nginx server for changes to take effect.
+```
+sudo systemctl restart nginx
+```
+
+5. Check now for Nginx version using curl as in Step 1 and you would see that it's disabled.
+
+<br>
+<br>
+
+* **Setup NGINX As Reverse Proxy**
+
+1. Create a configuration file for the app in `etc/nginx/conf.d/`, I'll call it nodeapp.conf:
+```
+sudo nano /etc/nginx/conf.d/nodeapp.conf
+```
+
+2. Copy the following and paste it in the newly created file and replace example.com with your app’s domain or public IP address:
+```
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name example.com;
+
+  access_log /var/log/nginx/nodeapp-access.log;
+  error_log /var/log/nginx/nodeapp-error.log;
+
+  location / {
+      proxy_pass http://localhost:3000/;
+      proxy_buffering off;
+      proxy_set_header X-Real-IP $remote_addr;
+  }
+}
+
+server {
+ server_name www.betdeer.com 168.235.108.88;
+ return 301 http://example.com$request_uri;
+}
+```
+
+The `proxy_pas`s directive is what makes this configuration a reverse proxy. It specifies that all requests which match the location block (in this case the root `/` path) should be forwarded to port `3000` on `localhost`, where the Node.js app is running.
+
+3. Disable or delete the default Welcome to NGINX page.
+```
+sudo mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.disabled
+```
+
+4. Test the configuration:
+```
+sudo nginx -t
+```
+
+5. If no errors are reported, reload the new configuration:
+```
+sudo nginx -s reload
+```
+
+6. In a browser, navigate to your Linode’s public IP address. You should see your node application.
+
+<br>
+
+* **Disable Buffering**
+
+For a simple app, the `proxy_pass` directive is sufficient. However, more complex apps may need additional directives. For example, Node.js is often used for apps that require a lot of real-time interactions. To accommodate, disable NGINX’s buffering feature.
+
+1. Add the line `proxy_buffering off;` to the config file beneath `proxy_pass`
+```
+location / {
+      proxy_pass http://localhost:3000/;
+      proxy_buffering off;
+}
+```
+
+<br>
+
+You can also modify or add the headers that are forwarded along with the proxied requests with `proxy_set_header`:
+```
+location / {
+    proxy_pass http://localhost:3000/;
+    proxy_set_header X-Real-IP $remote_addr;
+}
+```
+
+This configuration uses the built-in `$remote_addr` variable to send the IP address of the client to the proxy host.
+
+<br>
+<br>
+
+* **Configure HTTPS with Certbot**
+
+One advantage of a reverse proxy is that it is easy to set up HTTPS using a TLS certificate. Certbot is a tool that allows you to quickly obtain free certificates from Let’s Encrypt. This guide will use Certbot on Ubuntu 18.04, but the[ official site](https://certbot.eff.org/) maintains comprehensive installation and usage instructions for all major distros.
+
+Follow these steps to get a certificate via Certbot. Certbot will automatically update your NGINX configuration files to use the new certificate:
+
+1. Install the Certbot and web server-specific packages, then run Certbot:
+```
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo add-apt-repository universe
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install certbot python-certbot-nginx
+```
+
+2. Certbot will ask for information about the site. The responses will be saved as part of the certificate:
+```
+# sudo certbot --nginx
+
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator nginx, Installer nginx
+
+Which names would you like to activate HTTPS for?
+-------------------------------------------------------------------------------
+1: example.com
+2: www.example.com
+-------------------------------------------------------------------------------
+Select the appropriate numbers separated by commas and/or spaces, or leave input
+blank to select all options shown (Enter 'c' to cancel):
+```
+
+3. Certbot will also ask if you would like to automatically redirect HTTP traffic to HTTPS traffic. It is recommended that you select this option.
+
+4. When the tool completes, Certbot will store all generated keys and issued certificates in the `/etc/letsencrypt/live/$domain` directory, where `$domain` is the name of the domain entered during the Certbot certificate generation step.
+
+Finally, Certbot will update your web server configuration so that it uses the new certificate, and also redirects HTTP traffic to HTTPS if you chose that option.
+
+
+* **Automating renewal**
+
+The Certbot packages on your system come with a cron job that will renew your certificates automatically before they expire. Since Let's Encrypt certificates last for 90 days, it's highly advisable to take advantage of this feature. You can test automatic renewal for your certificates by running this command:
+```
+sudo certbot renew --dry-run
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
