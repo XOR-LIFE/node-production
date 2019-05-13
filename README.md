@@ -1218,7 +1218,7 @@ The first thing for a hacker who wants to hack a website is to gather informatio
 
 This will allow the hacker to look for the version history of the web server or plugin installed on your site and see if any critical vulnerability or security patches have been made so he can use it, That's why you ALWAYS need to keep everything on your website/machine UP-TO-DATE.
 
-* **Hide Nginx Server Version:**
+### **Hide Nginx Server Version:**
 
 This will show you how to hide Nginx server version on error pages and in the “Server HTTP” response header field. This is one of the keys recommended practices in securing your Nginx HTTP and proxy server.
 
@@ -1262,9 +1262,9 @@ sudo systemctl restart nginx
 <br>
 <br>
 
-* **Setup NGINX As Reverse Proxy**
+### **Setup NGINX As Reverse Proxy For Node Application**
 
-1. Create a configuration file for the app in `etc/nginx/conf.d/`, I'll call it nodeapp.conf:
+1. Create a configuration file for the app in `etc/nginx/conf.d/`, I'll call it `nodeapp.conf`:
 ```
 sudo nano /etc/nginx/conf.d/nodeapp.conf
 ```
@@ -1282,18 +1282,17 @@ server {
 
   location / {
       proxy_pass http://localhost:3000/;
-      proxy_buffering off;
-      proxy_set_header X-Real-IP $remote_addr;
+
   }
 }
 
 server {
- server_name www.betdeer.com 168.235.108.88;
+ server_name www.example.com 168.235.108.88;
  return 301 http://example.com$request_uri;
 }
 ```
 
-The `proxy_pas`s directive is what makes this configuration a reverse proxy. It specifies that all requests which match the location block (in this case the root `/` path) should be forwarded to port `3000` on `localhost`, where the Node.js app is running.
+The `proxy_pass` directive is what makes this configuration a reverse proxy. It specifies that all requests which match the location block (in this case the root `/` path) should be forwarded to port `3000` on `localhost`, where the Node.js app is running.
 
 3. Disable or delete the default Welcome to NGINX page.
 ```
@@ -1310,7 +1309,7 @@ sudo nginx -t
 sudo nginx -s reload
 ```
 
-6. In a browser, navigate to your Linode’s public IP address. You should see your node application.
+6. In a browser, navigate to your Domain or VPS public IP address. You should see your node application.
 
 <br>
 
@@ -1341,7 +1340,7 @@ This configuration uses the built-in `$remote_addr` variable to send the IP addr
 <br>
 <br>
 
-* **Configure HTTPS with Certbot**
+### **Configure HTTPS with Certbot**
 
 One advantage of a reverse proxy is that it is easy to set up HTTPS using a TLS certificate. Certbot is a tool that allows you to quickly obtain free certificates from Let’s Encrypt. This guide will use Certbot on Ubuntu 18.04, but the[ official site](https://certbot.eff.org/) maintains comprehensive installation and usage instructions for all major distros.
 
@@ -1386,20 +1385,6 @@ The Certbot packages on your system come with a cron job that will renew your ce
 ```
 sudo certbot renew --dry-run
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
