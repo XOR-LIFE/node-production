@@ -4,6 +4,9 @@
 The following instructions are based on **Ubuntu**, the steps are the same for whatever Linux distribution you are going to use but the commands might be different.
 ----------------------------------------------------------------------------------------
 
+<br>
+<br>
+
 ## Set up Your VPS
 ----------------------------------------------------------------------------------------
 
@@ -43,7 +46,7 @@ SFTP has pretty much replaced legacy FTP as a file transfer protocol and is quic
 
 SFTP also protects against password sniffing and man-in-the-middle attacks. It protects the integrity of the data using encryption and cryptographic hash functions and authenticates both the server and the user.
 
-SFTP uses the same port used by SSH so you would need nothing more to install if you have already enabled SSH in your machine.
+**SFTP uses the same port used by SSH** so you would need nothing more to install if you have already enabled SSH in your machine.
 
 All that you need is just an application to connect to your machine through SFTP.
 
@@ -146,10 +149,9 @@ sudo apt install git
 git --version
 ```
 
-<br>
-
 ----------------------------------------------------------------------------------------
 
+<br>
 <br>
 
 ## 1- Install NodeJS and NPM
@@ -215,9 +217,9 @@ this will uninstall node and npm but will keep your configuration files.
 ```
 sudo apt purge nodejs npm
 ```
-
 ----------------------------------------------------------------------------------------
 
+<br>
 <br>
 
 ## 2- Create a Node App With Express Server (Testing)
@@ -261,6 +263,7 @@ You can of course now navigate to your http://VPS-IP-Address:3000 from an outsid
 
 ----------------------------------------------------------------------------------------
 
+<br>
 <br>
 
 ## 3- Install PM2
@@ -448,7 +451,7 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 [Discover the monitoring dashboard for PM2](https://app.pm2.io/)
 
 
-## More about PM2
+### More about PM2
 
 - [Zero Downtime Reload](https://pm2.io/doc/en/runtime/guide/load-balancing/)
 - [Watch File & Restart](https://pm2.io/doc/en/runtime/features/watch-restart/)
@@ -462,6 +465,7 @@ If you manage your NodeJS app with PM2, **PM2+** makes it easy to monitor and ma
 
 ----------------------------------------------------------------------------------------
 
+<br>
 <br>
 
 ## 4- Install and Configure MongoDB
@@ -784,6 +788,7 @@ sudo rm -r /var/lib/mongodb
 ----------------------------------------------------------------------------------------
 
 <br>
+<br>
 
 ## 5- Configure UFW and Add MongoDB Port to Rules
 ----------------------------------------------------------------------------------------
@@ -869,6 +874,13 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 
 <br>
 
+**If you to deny traffic on a certain port (in this example, 111) you would only have to run:**
+```
+sudo ufw deny 111
+```
+
+<br>
+
 * **Allow External Access To MongoDB**
  
 Right now we have configured UFW to allow external access to our machine with Mongo port, but still, Mongo itself isn't configured for external access. even though the default port is open, the database server is currently listening on 127.0.0.1. To permit remote connections, you must include a publicly-routed IP address for your server to `mongo.conf` file.
@@ -918,11 +930,11 @@ net:
 
 **Finally:**
 * **[How to Configure Firewall, Whitelist and Blacklist in a self-hosted MongoDB server](https://medium.com/mongoaudit/how-to-configure-firewall-whitelist-and-blacklist-in-a-self-hosted-mongodb-server-9a898c6df675)**
-
-<br>
+* **[Full UFW Tutorial by Ubuntu](https://help.ubuntu.com/community/UFW)
 
 ----------------------------------------------------------------------------------------
 
+<br>
 <br>
 
 ## 6- Install Nginx
@@ -1138,15 +1150,9 @@ sudo systemctl enable nginx
 
 **`/var/log/nginx/error.log`** is a server error log file that contains error records.
 
-
-
-
-
-
-<br>
-
 ----------------------------------------------------------------------------------------
 
+<br>
 <br>
 
 ## 7- Adjust Your Node Application for Production
@@ -1201,10 +1207,9 @@ app.configure('production', () => {
 })
 ```
 
-
-
 ----------------------------------------------------------------------------------------
 
+<br>
 <br>
 
 ## 8- Configure NGINX
@@ -1273,7 +1278,7 @@ sudo systemctl restart nginx
 sudo nano /etc/nginx/conf.d/nodeapp.conf
 ```
 
-2. Copy the following and paste it in the newly created file and replace example.com with your domain:
+2. Copy the following and paste it in the newly created file:
 
 * If You Have a Domain, Use this:
 ```
@@ -1288,6 +1293,11 @@ server {
 
   location / {
       proxy_pass http://localhost:3000/;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
 
   }
 }
@@ -1298,7 +1308,7 @@ server {
 }
 ```
 
-**Replace xxx.xxx.xxx.xxx With you VPS IP Address**
+**Replace example.com With Your Domain and Replace xxx.xxx.xxx.xxx With Your VPS IP Address**
 
 * If You Don't Have a Domain, Use This:
 ```
@@ -1313,15 +1323,18 @@ server {
 
   location / {
       proxy_pass http://localhost:3000/;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
 
   }
 }
 
 ```
 
-**Replace xxx.xxx.xxx.xxx With you VPS IP Address**
-
-The `proxy_pass` directive is what makes this configuration a reverse proxy. It specifies that all requests which match the location block (in this case the root `/` path) should be forwarded to port `3000` on `localhost`, where the Node.js app is running.
+**Replace xxx.xxx.xxx.xxx With Your VPS IP Address**
 
 3. Disable or delete the default Welcome to NGINX page.
 ```
@@ -1342,6 +1355,36 @@ sudo nginx -s reload
 
 <br>
 
+
+* **What are these things we put in the configuration file ?!**
+
+**First Server Block:**
+
+1. `Listen` - Is the port Nginx will listen to for incoming connections.
+
+2. `server_name` - Your domain name without `www`.
+
+3. `access_log` - Defines the path for your site access log, you can set it to off by `access_log off;`.
+
+4. `error_log` - Defines the path for your site error log, you can set to off by `error_log off;`.
+
+5. `proxy_pass` - This directive is what makes this configuration a reverse proxy. It specifies that all requests which match the location block (in this case the root `/` path) should be forwarded to port `3000` on `localhost`, where the Node.js app is running.
+
+6. `proxy_http_version 1.1` - Defines the HTTP protocol version for proxying, by default it it set to 1.0. For Websockets and keepalive connections you need to use the version 1.1.
+
+7. `Upgrade $http_upgrade and Connection "upgrade"` - These header fields are required if your application is using Websockets.
+
+8. `Host $host` - The $host variable in the following order of precedence contains: host name from the request line, or host name from the Host request header field, or the server name matching a request.
+
+9. `X-Real-IP $remote_addr` - Forwards the real visitor remote IP address to the proxied server.
+
+
+**Second Server Block:**
+
+This will redirect all requests to your subdomain `www` and VPS-IP-Address to your domain name without `www`.
+
+<br>
+
 * **Disable Buffering**
 
 For a simple app, the `proxy_pass` directive is sufficient. However, more complex apps may need additional directives. For example, Node.js is often used for apps that require a lot of real-time interactions. To accommodate, disable NGINX’s buffering feature.
@@ -1354,17 +1397,6 @@ location / {
 }
 ```
 
-<br>
-
-You can also modify or add the headers that are forwarded along with the proxied requests with `proxy_set_header`:
-```
-location / {
-    proxy_pass http://localhost:3000/;
-    proxy_set_header X-Real-IP $remote_addr;
-}
-```
-
-This configuration uses the built-in `$remote_addr` variable to send the IP address of the client to the proxy host.
 
 <br>
 <br>
@@ -1417,4 +1449,27 @@ sudo certbot renew --dry-run
 
 
 
-## To Be Continued ....
+## This Section of Is Yet To Be completed with serving static files, proxying multiple node applications and adding security tags....
+
+----------------------------------------------------------------------------------------
+
+<br>
+<br>
+
+## 9- Useful Readings
+----------------------------------------------------------------------------------------
+
+
+* **[How to use MongoDB with Node.js](https://flaviocopes.com/node-mongodb/)**
+* **[npm global or local packages](https://flaviocopes.com/npm-packages-local-global/)**
+* **[npm dependencies and devDependencies](https://flaviocopes.com/npm-dependencies-devdependencies/)**
+* **[Find the installed version of an npm package](https://flaviocopes.com/npm-know-version-installed/)**
+* **[Update all the Node dependencies to their latest version](https://flaviocopes.com/update-npm-dependencies/)**
+* **[The Node path module](https://flaviocopes.com/node-module-path/)**
+* **[Node File Paths](https://flaviocopes.com/node-file-paths/)**
+* **[Working with folders in Node](https://flaviocopes.com/node-folders/)**
+* **[Error handling in Node.js](https://flaviocopes.com/node-exceptions/)**
+
+
+
+
