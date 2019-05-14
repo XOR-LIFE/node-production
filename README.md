@@ -110,9 +110,9 @@ This will launch the wizard and you just need to log in with your RealVNC creden
 
 6. Start RealVNC and Enable it on boot
 ```
-sudo systemctl start vncserver-x11-serviced.service
+sudo systemctl start vncserver-x11-serviced
 
-sudo systemctl enable vncserver-x11-serviced.service
+sudo systemctl enable vncserver-x11-serviced
 ```
 **Installation is now finished.**
 
@@ -836,9 +836,13 @@ which now should return the following:
 Status: active
 
 To                         Action      From
---                         ------      ----                              
-OpenSSH                    ALLOW       Anywhere                        
+--                         ------      ----
+80/tcp                     ALLOW       Anywhere
+443/tcp                    ALLOW       Anywhere
+OpenSSH                    ALLOW       Anywhere
 5900                       ALLOW       Anywhere
+80/tcp (v6)                ALLOW       Anywhere (v6)
+443/tcp (v6)               ALLOW       Anywhere (v6)
 OpenSSH (v6)               ALLOW       Anywhere (v6)
 5900 (v6)                  ALLOW       Anywhere (v6)
 ```
@@ -1055,7 +1059,7 @@ curl -I 127.0.0.1
 you should get
 ```
 HTTP/1.1 200 OK
-Server: nginx/1.13.8
+Server: nginx/1.16.0
 ```
 
 You can also open your browser and navigate to your VPS-IP-Address to see the default NGINX page.
@@ -1065,7 +1069,7 @@ You can also open your browser and navigate to your VPS-IP-Address to see the de
 9. By default Nginx is now configured to run after a reboot, to check that use:
 
 ```
-sudo systemctl is-enabled nginx.service
+sudo systemctl is-enabled nginx
 ```
 
 And you should get `enabled` as output. If you didn't, then:
@@ -1074,9 +1078,9 @@ And you should get `enabled` as output. If you didn't, then:
 10. Enable Nginx to start on boot and start Nginx immediately:
 
 ```
-sudo systemctl enable nginx.service
+sudo systemctl enable nginx
 
-sudo systemctl start nginx.service
+sudo systemctl start nginx
 ```
 
 <br>
@@ -1085,7 +1089,7 @@ sudo systemctl start nginx.service
 
 * Start Nginx:
 ````
-sudo systemctl start nginx.service
+sudo systemctl start nginx
 ````
 
 * Stop Nginx:
@@ -1095,11 +1099,11 @@ sudo nginx -s stop  — fast shutdown
 sudo nginx -s quit  — graceful shutdown
 ```
 
-alternatively, `sudo systemctl stop nginx.service`
+alternatively, `sudo systemctl stop nginx`
 
 * Status of Nginx:
 ```
-sudo systemctl status nginx.service  
+sudo systemctl status nginx
 ```
 
 * Reload Nginx:
@@ -1112,12 +1116,12 @@ sudo nginx -s reload
 
 * Disable Nginx at Booting:
 ```
-sudo systemctl disable nginx.service
+sudo systemctl disable nginx
 ```
 
 * Enable Nginx at Booting:
 ```
-sudo systemctl enable nginx.service  
+sudo systemctl enable nginx
 ```
 
 <br>
@@ -1269,7 +1273,9 @@ sudo systemctl restart nginx
 sudo nano /etc/nginx/conf.d/nodeapp.conf
 ```
 
-2. Copy the following and paste it in the newly created file and replace example.com with your app’s domain or public IP address:
+2. Copy the following and paste it in the newly created file and replace example.com with your domain:
+
+* If You Have a Domain, Use this:
 ```
 server {
   listen 80;
@@ -1287,10 +1293,33 @@ server {
 }
 
 server {
- server_name www.example.com 168.235.108.88;
+ server_name www.example.com xxx.xxx.xxx.xxx;
  return 301 http://example.com$request_uri;
 }
 ```
+
+**Replace xxx.xxx.xxx.xxx With you VPS IP Address**
+
+* If You Don't Have a Domain, Use This:
+```
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name xxx.xxx.xxx.xxx;
+
+  access_log /var/log/nginx/nodeapp-access.log;
+  error_log /var/log/nginx/nodeapp-error.log;
+
+  location / {
+      proxy_pass http://localhost:3000/;
+
+  }
+}
+
+```
+
+**Replace xxx.xxx.xxx.xxx With you VPS IP Address**
 
 The `proxy_pass` directive is what makes this configuration a reverse proxy. It specifies that all requests which match the location block (in this case the root `/` path) should be forwarded to port `3000` on `localhost`, where the Node.js app is running.
 
