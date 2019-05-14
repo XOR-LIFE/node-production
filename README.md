@@ -1298,7 +1298,10 @@ server {
       proxy_set_header Connection "upgrade";
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
-
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Host  $host;
+      proxy_set_header X-Forwarded-Port  $server_port;
+	  
   }
 }
 
@@ -1328,7 +1331,10 @@ server {
       proxy_set_header Connection "upgrade";
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
-
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Host  $host;
+      proxy_set_header X-Forwarded-Port  $server_port;
+	  
   }
 }
 
@@ -1377,6 +1383,12 @@ sudo nginx -s reload
 8. `Host $host` - The $host variable in the following order of precedence contains: host name from the request line, or host name from the Host request header field, or the server name matching a request.
 
 9. `X-Real-IP $remote_addr` - Forwards the real visitor remote IP address to the proxied server.
+
+10. `X-Forwarded-For $proxy_add_x_forwarded_for` - A list containing the IP addresses of every server the client has been proxied through.
+
+11. `X-Forwarded-Host $host` - Defines the original host requested by the client.
+
+12. `X-Forwarded-Port $server_port` - Defines the original port requested by the client.
 
 
 **Second Server Block:**
