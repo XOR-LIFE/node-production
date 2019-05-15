@@ -1403,7 +1403,9 @@ sudo nginx -s reload
 
 **Second Server Block:**
 
-This will redirect all requests to your subdomain `www` and your `VPS-IP-Address` to your domain name without `www`.
+`return 301` - This will redirect all requests to your subdomain `www` and your `VPS-IP-Address` to your domain name without `www`.
+
+`$request_uri` - This is responsible to redirect the path and parameters along with the domain.
 
 <br>
 
@@ -1419,6 +1421,100 @@ location / {
 }
 ```
 
+<br>
+<br>
+
+### **Running And Proxying Multiple Node Apps**
+
+In the previous section, you've learned how to run and proxy **one** node application. But, what if you want to run multiple node applications on the same server.
+
+This also is considered a production best practice, for example, you would have your main node app which will serve the main page and it's functions and another separate app responsible for registration and another app for your blog, etc..
+
+And when users need to register, you would redirect them to http://example.com/register and in the back scene its a different node application proxied to run on the `/register` path that is completely responsible for the registration process and same goes for example if you have a blog or a major thing on your site.
+
+This would allow you as a node developer to debug and dissect the code of each thing on your website separately, if you want to implement a payment processor for your website you would just go for the folder where your registration application resides, if you want for example to shut down your blog or add a new feature you would just do it without having to edit the whole site code and then reload it which might highly result in a connection drop to current visitors.
+
+<br>
+
+This is achieved very easy, you only have to speacify two things in the configuration file which is the `loaction` and `proxy_pass`.
+```
+  location /register {
+      proxy_pass http://localhost:3001/;
+  }
+```
+
+This is an example of a fully working nginx configuration that proxies four node apps:
+```
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name example.com;
+
+  access_log /var/log/nginx/nodeapp-access.log;
+  error_log /var/log/nginx/nodeapp-error.log;
+
+  location / {
+      proxy_pass http://localhost:3000/;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection 'upgrade';
+      proxy_set_header Host $host;
+      proxy_cache_bypass $http_upgrade;
+    }
+
+  location /register {
+      proxy_pass http://localhost:3001;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection 'upgrade';
+      proxy_set_header Host $host;
+      proxy_cache_bypass $http_upgrade;
+	
+  location /blog {
+      proxy_pass http://localhost:3002;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection 'upgrade';
+      proxy_set_header Host $host;
+      proxy_cache_bypass $http_upgrade;
+    }
+
+  location /shop {
+      proxy_pass http://localhost:3004;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection 'upgrade';
+      proxy_set_header Host $host;
+      proxy_cache_bypass $http_upgrade;
+    }
+
+}
+
+server {
+ server_name www.example.com xxx.xxx.xxx.xxx;
+ return 301 http://example.com$request_uri;
+}
+```
+
+<br>
+<br>
+
+### **Serving Error Pages**
+
+This is how to serve error pages of the 500 family
+```
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+```
+
+Above code is to placed in the server block beneath the location section.
+
+Visitors will see this page when they visit one of your proxied paths `/blog` while its currently down (node app is not active).
+
+You can, of course, design your custom page and replace `50x.html` with the new file name.
 
 <br>
 <br>
@@ -1471,7 +1567,7 @@ sudo certbot renew --dry-run
 
 
 
-## This Section Is Yet To Be completed with serving static files, proxying multiple node applications and adding security tags....
+## This Section Is Yet To Be completed with serving static files and adding security tags ...
 
 ----------------------------------------------------------------------------------------
 
@@ -1491,7 +1587,6 @@ sudo certbot renew --dry-run
 * **[Node File Paths](https://flaviocopes.com/node-file-paths/)**
 * **[Working with folders in Node](https://flaviocopes.com/node-folders/)**
 * **[Error handling in Node.js](https://flaviocopes.com/node-exceptions/)**
-
 
 ----------------------------------------------------------------------------------------
 
@@ -1522,4 +1617,7 @@ _**This is a list you should check before finally saying that my website is up a
 * Node applications ports MUST NOT be allowed for external access and must be blocked/denied in UFW
 
 * Nginx must be enabled to run on startup as mentioned in the installation section of Nginx
+
+* After making any edits to nginx conf files you should check with `sudo nginx -t` and then reload `sudo nginx -s reload`
+
 
