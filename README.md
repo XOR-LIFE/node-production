@@ -891,6 +891,7 @@ However, because you have to enable authentication, you might run into issues wh
 
 _**Note: You only allow external access of mongo if your node application is on another machine or if you want to access it through applications such as Robo 3T, but if your node application is running on the same machine where mongo is installed then you won't have to bind mongo IP.  Binding also could be on LAN scale or WAN scale, it all depends on where are your node and mongo installed.**_
 
+<br>
 
 1. Allow remote connections, to bind MongoDB to all network interfaces open the config file `/etc/mongod.conf`:
 ```
@@ -1302,9 +1303,10 @@ server {
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Host  $host;
-      proxy_set_header X-Forwarded-Port  $server_port;
-	  
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Host $host;
+      proxy_set_header X-Forwarded-Port $server_port;
+      proxy_cache_bypass $http_upgrade;
   }
 }
 
@@ -1335,9 +1337,10 @@ server {
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Host  $host;
-      proxy_set_header X-Forwarded-Port  $server_port;
-	  
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Host $host;
+      proxy_set_header X-Forwarded-Port $server_port;
+      proxy_cache_bypass $http_upgrade;
   }
 }
 
@@ -1389,9 +1392,13 @@ sudo nginx -s reload
 
 10. `X-Forwarded-For $proxy_add_x_forwarded_for` - A list containing the IP addresses of every server the client has been proxied through.
 
-11. `X-Forwarded-Host $host` - Defines the original host requested by the client.
+11. `X-Forwarded-Proto $scheme` - When used inside HTTPS server block, each HTTP response from the proxied server will be rewritten to HTTPS.
 
-12. `X-Forwarded-Port $server_port` - Defines the original port requested by the client.
+12. `X-Forwarded-Host $host` - Defines the original host requested by the client.
+
+13. `X-Forwarded-Port $server_port` - Defines the original port requested by the client.
+
+14. `proxy_cache_bypass $http_upgrade` - Sets conditions under which the response will not be taken from a cache.
 
 
 **Second Server Block:**
@@ -1486,5 +1493,33 @@ sudo certbot renew --dry-run
 * **[Error handling in Node.js](https://flaviocopes.com/node-exceptions/)**
 
 
+----------------------------------------------------------------------------------------
 
+<br>
+<br>
+
+## 10- Checklist
+----------------------------------------------------------------------------------------
+
+_**This is a list you should check before finally saying that my website is up and ready, It's meant to remind you of things you might've forgotten.**_
+
+* Node.js and NPM are installed
+
+* PM2 is used to run and manage your node applications
+
+* PM2 is configured to run on startup
+
+* PM2 has saved the list of node applications that supposed to run on startup
+
+* UFW is enabled and used to manage access to your machine
+
+* MongoDB port '27017' MUST NOT be allowed for external access if,
+
+1. Your node and mongo are running on the same machine, and,
+
+2.  You are not going to allow external access
+
+* Node applications ports MUST NOT be allowed for external access and must be blocked/denied in UFW
+
+* Nginx must be enabled to run on startup as mentioned in the installation section of Nginx
 
