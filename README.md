@@ -883,11 +883,14 @@ sudo ufw deny 111
 
 * **Allow External Access To MongoDB**
  
-Right now we have configured UFW to allow external access to our machine with Mongo port, but still, Mongo itself isn't configured for external access. even though the default port is open, the database server is currently listening on 127.0.0.1. To permit remote connections, you must include a publicly-routed IP address for your server to `mongo.conf` file.
+Right now we have configured UFW to allow external access to our machine with Mongo port, but still, Mongo itself isn't configured for external access. even though the default port is open, the database server is currently listening on 127.0.0.1. And to permit remote connections, you must include a publicly-routed IP address for your server to `mongo.conf` file.
 
 By default, MongoDB authorizes all logs from the local machine. There are no problems while the application is developing.
 
 However, because you have to enable authentication, you might run into issues when the application is ready and you have to deploy it, So you need to configure it.
+
+_**Note: You only allow external access of mongo if your node application is on another machine or if you want to access it through applications such as Robo 3T, but if your node application is running on the same machine where mongo is installed then you won't have to bind mongo IP.  Binding also could be on LAN scale or WAN scale, it all depends on where are your node and mongo installed.**_
+
 
 1. Allow remote connections, to bind MongoDB to all network interfaces open the config file `/etc/mongod.conf`:
 ```
@@ -930,7 +933,7 @@ net:
 
 **Finally:**
 * **[How to Configure Firewall, Whitelist and Blacklist in a self-hosted MongoDB server](https://medium.com/mongoaudit/how-to-configure-firewall-whitelist-and-blacklist-in-a-self-hosted-mongodb-server-9a898c6df675)**
-* **[Full UFW Tutorial by Ubuntu](https://help.ubuntu.com/community/UFW)
+* **[Full UFW Tutorial by Ubuntu](https://help.ubuntu.com/community/UFW)**
 
 ----------------------------------------------------------------------------------------
 
@@ -1006,7 +1009,7 @@ Based on the previous methods, I'll go with the second option.
 
 <br>
 
-First, you need to know that NGINX Open Source is available in two versions (According to NGINX):
+First, you need to know that NGINX Open Source is available in two versions (Following description is according to NGINX):
 
 * **Mainline** – Includes the latest features and bug fixes and is always up to date. It is reliable, but it may include some experimental modules, and it may also have some number of new bugs.
 * **Stable** – Doesn’t include all of the latest features, but has critical bug fixes that are always backported to the mainline version. We recommend the stable version for production servers.
@@ -1374,13 +1377,13 @@ sudo nginx -s reload
 
 4. `error_log` - Defines the path for your site error log, you can set to off by `error_log off;`.
 
-5. `proxy_pass` - This directive is what makes this configuration a reverse proxy. It specifies that all requests which match the location block (in this case the root `/` path) should be forwarded to port `3000` on `localhost`, where the Node.js app is running.
+5. **`proxy_pass` - This directive is what makes this configuration a reverse proxy. It specifies that all requests which match the location block (in this case the root `/` path) should be forwarded to port `3000` on `localhost`, where the Node.js app is running.**
 
-6. `proxy_http_version 1.1` - Defines the HTTP protocol version for proxying, by default it it set to 1.0. For Websockets and keepalive connections you need to use the version 1.1.
+6. `proxy_http_version 1.1` - Defines the HTTP protocol version for proxying, by default it is set to 1.0. For Websockets and keepalive connections you need to use the version 1.1.
 
 7. `Upgrade $http_upgrade and Connection "upgrade"` - These header fields are required if your application is using Websockets.
 
-8. `Host $host` - The $host variable in the following order of precedence contains: host name from the request line, or host name from the Host request header field, or the server name matching a request.
+8. `Host $host` - The $host variable in the following order of precedence contains hostname from the request line, or hostname from the Host request-header field, or the server name matching a request.
 
 9. `X-Real-IP $remote_addr` - Forwards the real visitor remote IP address to the proxied server.
 
@@ -1393,7 +1396,7 @@ sudo nginx -s reload
 
 **Second Server Block:**
 
-This will redirect all requests to your subdomain `www` and VPS-IP-Address to your domain name without `www`.
+This will redirect all requests to your subdomain `www` and your `VPS-IP-Address` to your domain name without `www`.
 
 <br>
 
@@ -1461,7 +1464,7 @@ sudo certbot renew --dry-run
 
 
 
-## This Section of Is Yet To Be completed with serving static files, proxying multiple node applications and adding security tags....
+## This Section Is Yet To Be completed with serving static files, proxying multiple node applications and adding security tags....
 
 ----------------------------------------------------------------------------------------
 
