@@ -1519,6 +1519,91 @@ You can, of course, design your custom page and replace `50x.html` with the new 
 <br>
 <br>
 
+
+### **Modifying Open File/Concurrent Connections Limit**
+
+*`failed (24: Too many open files)`**
+
+This error above is something that you might get and I discovered it by chance while taking a look over my error.log file.
+
+This is related to the limits imposed by Linux to set the maximum number of open files and this simply means **connections** because visitors request files from your machine, therefore, a limit of open files of 1000 means that you can only have 1000 users that can surf your site at the same time and this is something you need fix asap, so, let's fix it.
+
+To see the hard and soft values, issue the command as follows:
+```
+ulimit -Hn
+
+ulimit -Sn
+```
+
+1. Open file `/etc/sysctl.conf` with your prefered editor:
+```
+sudo nano /etc/sysctl.conf
+```
+
+2. Add this line to it:
+```
+fs.file-max = 1000000
+```
+
+3. Edit following file:
+```
+sudo nano /etc/security/limits.conf
+```
+
+4. Add the following at the end of it:
+```
+nginx soft     nofile         1000000   
+nginx hard     nofile         1000000
+* soft     nproc          1000000    
+* hard     nproc          70000   
+* soft     nofile         100000   
+* hard     nofile         100000
+root soft     nproc          100000    
+root hard     nproc          100000   
+root soft     nofile         100000   
+root hard     nofile         100000
+```
+
+5. Reload the changes:
+```
+sudo sysctl -p
+```
+
+6. set limit through ulimit
+```
+ulimit -n 100000
+```
+
+7. Remove restriction by nginx, open main conf file
+```
+sudo nano /etc/nginx/nginx.conf
+```
+
+8. Add `worker_rlimit_nofile` Option in nginx conf right beneath `worker_processes` variable:
+```
+worker_rlimit_nofile 100000;
+```
+
+9. Change `worker_connections` value to 100000
+``
+worker_connections  100000;
+``
+
+10. Check for Nginx configuration and reload
+```
+sudo nginx -t && sudo nginx -s reload
+```
+
+11. Restart your machine for changes to take effect and check again:
+```
+ulimit -Hn
+
+ulimit -Sn
+```
+
+<br>
+<br>
+
 ### **Configure HTTPS with Certbot**
 
 One advantage of a reverse proxy is that it is easy to set up HTTPS using a TLS certificate. Certbot is a tool that allows you to quickly obtain free certificates from Let’s Encrypt. This guide will use Certbot on Ubuntu 18.04, but the[ official site](https://certbot.eff.org/) maintains comprehensive installation and usage instructions for all major distros.
@@ -1567,7 +1652,7 @@ sudo certbot renew --dry-run
 
 
 
-## This Section Is Yet To Be completed with serving static files and adding security tags ...
+## This Section Is Yet To Be completed with serving static files, adding security tags, enabling gzip and nginx best practices and configurations...
 
 ----------------------------------------------------------------------------------------
 
