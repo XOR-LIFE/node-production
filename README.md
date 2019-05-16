@@ -1376,7 +1376,7 @@ sudo nginx -s reload
 
 2. `server_name` - Your domain name without `www`.
 
-3. `access_log` - Defines the path for your site access log, you can set it to off by `access_log off;`.
+3. `access_log` - Defines the path for your site access log, you can set it to off by `access_log off;` to save disk space and IO.
 
 4. `error_log` - Defines the path for your site error log, you can set to off by `error_log off;`.
 
@@ -1392,7 +1392,7 @@ sudo nginx -s reload
 
 10. `X-Forwarded-For $proxy_add_x_forwarded_for` - A list containing the IP addresses of every server the client has been proxied through.
 
-11. `X-Forwarded-Proto $scheme` - When used inside HTTPS server block, each HTTP response from the proxied server will be rewritten to HTTPS.
+11. `X-Forwarded-Proto $scheme` - When used inside HTTPS server block,  each HTTP response from the proxied server will be rewritten to HTTPS.
 
 12. `X-Forwarded-Host $host` - Defines the original host requested by the client.
 
@@ -1411,7 +1411,7 @@ sudo nginx -s reload
 
 * **Disable Buffering**
 
-For a simple app, the `proxy_pass` directive is sufficient. However, more complex apps may need additional directives. For example, Node.js is often used for apps that require a lot of real-time interactions. To accommodate, disable NGINX’s buffering feature.
+More complex apps may need additional directives. For example, Node.js is often used for apps that require a lot of real-time interactions. To accommodate, disable NGINX’s buffering feature.
 
 1. Add the line `proxy_buffering off;` to the config file beneath `proxy_pass`
 ```
@@ -1528,7 +1528,7 @@ This error above is something that you might get and I discovered it by chance w
 
 This is related to the limits imposed by Linux to set the maximum number of open files and this simply means **connections** because visitors request files from your machine, therefore, a limit of open files of 1000 means that you can only have 1000 users that can surf your site at the same time and this is something you need fix asap, so, let's fix it.
 
-To see the hard and soft values, issue the command as follows:
+To check for hard and soft values, run the following commands:
 ```
 ulimit -Hn
 
@@ -1555,7 +1555,7 @@ sudo nano /etc/security/limits.conf
 nginx soft     nofile         1000000   
 nginx hard     nofile         1000000
 * soft     nproc          1000000    
-* hard     nproc          70000   
+* hard     nproc          100000   
 * soft     nofile         100000   
 * hard     nofile         100000
 root soft     nproc          100000    
