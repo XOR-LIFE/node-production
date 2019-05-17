@@ -1265,9 +1265,9 @@ sudo nano /etc/nginx/nginx.conf
 
 ![](https://i.ibb.co/ryg3wSL/server-tokens.jpg)
 
-4. Save the file and restart Nginx server for changes to take effect.
+4. Save the file and reload Nginx server for changes to take effect.
 ```
-sudo systemctl restart nginx
+sudo nginx -s reload
 ```
 
 5. Check now for Nginx version using curl as in Step 1 and you would see that it's disabled.
@@ -1277,12 +1277,20 @@ sudo systemctl restart nginx
 
 ### **Setup NGINX As Reverse Proxy For Node Application**
 
-1. Create a configuration file for the app in `etc/nginx/conf.d/`, I'll call it `nodeapp.conf`:
+This is what we've been waiting to do with nginx, which is to configure it as a reverse proxy for our node application/s.
+
+1. First, run your node application with PM2 on port 3000 
+
+
+2. Create a configuration file for the app in `etc/nginx/conf.d/`, I'll call it `nodeapp.conf`:
 ```
 sudo nano /etc/nginx/conf.d/nodeapp.conf
 ```
 
-2. Copy the following and paste it in the newly created file:
+_**Note: Don't ever use the tab key to make indentation in configuration files and always use the space key to make spaces**_
+
+
+3. Copy the following and paste it in the newly created file:
 
 * If You Have a Domain, Use this:
 ```
@@ -1348,22 +1356,22 @@ server {
 
 **Replace xxx.xxx.xxx.xxx With Your VPS IP Address**
 
-3. Disable or delete the default Welcome to NGINX page.
+4. Disable or delete the default Welcome to NGINX page.
 ```
 sudo mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.disabled
 ```
 
-4. Test the configuration:
+5. Test the configuration:
 ```
 sudo nginx -t
 ```
 
-5. If no errors are reported, reload the new configuration:
+6. If no errors are reported, reload the new configuration:
 ```
 sudo nginx -s reload
 ```
 
-6. In a browser, navigate to your Domain or VPS public IP address. You should see your node application.
+7. In a browser, navigate to your Domain or VPS public IP address. You should see your node application.
 
 <br>
 
@@ -1392,7 +1400,7 @@ sudo nginx -s reload
 
 10. `X-Forwarded-For $proxy_add_x_forwarded_for` - A list containing the IP addresses of every server the client has been proxied through.
 
-11. `X-Forwarded-Proto $scheme` - When used inside HTTPS server block,  each HTTP response from the proxied server will be rewritten to HTTPS.
+11. `X-Forwarded-Proto $scheme` - When used inside HTTPS server block , each HTTP response from the proxied server will be rewritten to HTTPS.
 
 12. `X-Forwarded-Host $host` - Defines the original host requested by the client.
 
@@ -1403,7 +1411,7 @@ sudo nginx -s reload
 
 **Second Server Block:**
 
-`return 301` - This will redirect all requests to your subdomain `www` and your `VPS-IP-Address` to your domain name without `www`.
+`return 301` - This will redirect all requests of your subdomain `www` and your `VPS-IP-Address` to your domain name without `www`.
 
 `$request_uri` - This is responsible to redirect the path and parameters along with the domain.
 
@@ -1413,7 +1421,7 @@ sudo nginx -s reload
 
 More complex apps may need additional directives. For example, Node.js is often used for apps that require a lot of real-time interactions. To accommodate, disable NGINX’s buffering feature.
 
-1. Add the line `proxy_buffering off;` to the config file beneath `proxy_pass`
+1. Add the line `proxy_buffering off;` to the config file beneath `proxy_pass` inside location section
 ```
 location / {
       proxy_pass http://localhost:3000/;
@@ -1428,22 +1436,22 @@ location / {
 
 In the previous section, you've learned how to run and proxy **one** node application. But, what if you want to run multiple node applications on the same server.
 
-This also is considered a production best practice, for example, you would have your main node app which will serve the main page and it's functions and another separate app responsible for registration and another app for your blog, etc..
+This also is considered a production best practice, for example, you would have your main node app which will serve the main page and it's functions and another separate app responsible for registration and another app for your blog, shop, etc..
 
-And when users need to register, you would redirect them to http://example.com/register and in the back scene its a different node application proxied to run on the `/register` path that is completely responsible for the registration process and same goes for example if you have a blog or a major thing on your site.
+And when users need to register, you would redirect them to http://example.com/register and in the back scene its a different node application proxied to run on the `/register` path that is completely responsible for the registration process and same goes for example if you have a blog or a shop or a major thing on your site.
 
 This would allow you as a node developer to debug and dissect the code of each thing on your website separately, if you want to implement a payment processor for your website you would just go for the folder where your registration application resides, if you want for example to shut down your blog or add a new feature you would just do it without having to edit the whole site code and then reload it which might highly result in a connection drop to current visitors.
 
 <br>
 
-This is achieved very easy, you only have to speacify two things in the configuration file which is the `loaction` and `proxy_pass`.
+This is achieved very easy, you only have to specify two things in the configuration file which is the `loaction` and `proxy_pass`.
 ```
   location /register {
       proxy_pass http://localhost:3001/;
   }
 ```
 
-This is an example of a fully working nginx configuration that proxies four node apps:
+This is an example of a configuration that proxies four node apps:
 ```
 server {
   listen 80;
@@ -1451,7 +1459,7 @@ server {
 
   server_name example.com;
 
-  access_log /var/log/nginx/nodeapp-access.log;
+  access_log off;
   error_log /var/log/nginx/nodeapp-error.log;
 
   location / {
@@ -1510,7 +1518,7 @@ This is how to serve error pages of the 500 family
     }
 ```
 
-Above code is to placed in the server block beneath the location section.
+Above code is to placed in the server block beneath the location section **but not inside it**.
 
 Visitors will see this page when they visit one of your proxied paths `/blog` while its currently down (node app is not active).
 
@@ -1522,7 +1530,7 @@ You can, of course, design your custom page and replace `50x.html` with the new 
 
 ### **Modifying Open File/Concurrent Connections Limit**
 
-*`failed (24: Too many open files)`**
+**`failed (24: Too many open files)`**
 
 This error above is something that you might get and I discovered it by chance while taking a look over my error.log file.
 
@@ -1594,12 +1602,116 @@ worker_connections  100000;
 sudo nginx -t && sudo nginx -s reload
 ```
 
-11. Restart your machine for changes to take effect and check again:
+11. **Restart your machine for changes to take effect** and check again:
 ```
 ulimit -Hn
 
 ulimit -Sn
 ```
+
+<br>
+<br>
+
+### **Enable Nginx Status Page**
+
+Nginx has status page to give you information about Nginx’s server health including Active connections and other data. You can use this info to fine tune your server.
+ 
+1. On most Linux distributions, the Nginx version comes with the ngx_http_stub_status_module enabled. You can check out if the module is already enabled or not using following command.
+```
+nginx -V 2>&1 | grep -o with-http_stub_status_module
+```
+
+You should see the following `with-http_stub_status_module`
+
+2. Edit your server conf file in conf.d and 
+```
+sudo nano /etc/nginx/conf.d/nodeapp.conf
+```
+
+3. Add the following inside the server block
+```
+   location /nginx_status {
+      stub_status on;
+      access_log   off;
+      allow 127.0.0.1;   #only allow requests from localhost
+      deny all;   #deny all other hosts
+    }
+```
+
+We simply created a new location at `nginx_status` and you can change it to what you want, the `stub_status on;` is what resposible to turn on nginx stats.
+
+4. Check for configurations and reload
+```
+sudo nginx -t
+sudo nginx -s reload
+```
+
+5. Go to `127.0.0.1/nginx_status` or `curl 127.0.0.1/nginx_status` and you should see an output like this
+```
+Active connections: 43 
+server accepts handled requests
+ 7368 7368 10993 
+Reading: 0 Writing: 5 Waiting: 38
+```
+
+
+**Interpretation:**
+
+* **Active connections** – Number of all open connections. This doesn’t mean the number of users. A single user, for a single pageview, can open many concurrent connections to your server.
+* **Server accepts handled requests** – This shows three values.
+  * First is total accepted connections.
+  * Second is total handled connections. Usually, the first 2 values are the same.
+  * Third value is number of and handles requests. This is usually greater than the second value.
+  * Dividing third-value by second-one will give you the number of requests per connection handled by Nginx. In the above example, 10993/7368, **1.49 requests per connections**.
+* Reading – The current number of connections where Nginx is reading the request header.
+* Writing – The current number of connections where Nginx is writing the response back to the client.
+* Waiting – keep-alive connections, actually it is active – (reading + writing). This value depends on keepalive-timeout. Do not confuse non-zero waiting value for poor performance. It can be ignored. Although, you can force zero waiting by setting keepalive_timeout 0;
+
+<br>
+<br>
+
+### **Nginx Better Configurations**
+
+worker_processes auto;
+
+
+
+to  be continued...
+
+
+
+
+
+
+
+<br>
+<br>
+
+### **Enable GZip Compression**
+
+
+to  be continued...
+
+
+
+
+<br>
+<br>
+
+### **Add Security tags**
+
+
+to  be continued...
+
+
+<br>
+<br>
+
+### **Serving Static Files**
+
+to be continued...
+
+
 
 <br>
 <br>
@@ -1650,16 +1762,46 @@ The Certbot packages on your system come with a cron job that will renew your ce
 sudo certbot renew --dry-run
 ```
 
+<br>
+<br>
+
+### **Enabling HTTP /2.0 Support**
+
+to be continued...
 
 
-## This Section Is Yet To Be completed with serving static files, adding security tags, enabling gzip and nginx best practices and configurations...
+
+
+<br>
+<br>
+
+**Further Reading:**
+
+1. [A Guide to Caching with NGINX and NGINX Plus](https://www.nginx.com/blog/nginx-caching-guide/)
+
+
+
 
 ----------------------------------------------------------------------------------------
 
 <br>
 <br>
 
-## 9- Useful Readings
+## 9- Canonical Livepatch
+----------------------------------------------------------------------------------------
+
+Livepatch allows you to install some critical kernel security updates without rebooting your system, by directly patching the running kernel.
+
+It does not affect regular (not security-critical) kernel updates, you still have to install those the regular way and reboot. It does not affect updates to other non-kernel packages either, which don't require a reboot anyway.
+
+Activate at: **[Canonical Livepatch](https://ubuntu.com/livepatch)**
+
+----------------------------------------------------------------------------------------
+
+<br>
+<br>
+
+## 10- Useful Readings
 ----------------------------------------------------------------------------------------
 
 
@@ -1678,7 +1820,7 @@ sudo certbot renew --dry-run
 <br>
 <br>
 
-## 10- Checklist
+## 11- Checklist
 ----------------------------------------------------------------------------------------
 
 _**This is a list you should check before finally saying that my website is up and ready, It's meant to remind you of things you might've forgotten.**_
