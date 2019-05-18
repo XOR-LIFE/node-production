@@ -1223,6 +1223,25 @@ Above work was only child play :smiley:  , This is the part that you really need
 
 <br>
 
+### **Configuration Notes:**
+
+As the use of the NGINX web server has grown, NGINX, Inc. has worked to distance NGINX from configurations and terminology that were used in the past when trying to ease adoption for people already accustomed to Apache.
+
+If you’re familiar with Apache, you’ll know that multiple site configurations (called Virtual Hosts in Apache terminology) are stored at `/etc/apache/sites-available/`, which symlink to files in `/etc/apache/sites-enabled/`. However, many guides and blog posts for NGINX recommend this same configuration. As you could expect, this has led to some confusion, and the assumption that NGINX regularly uses the `../sites-available/` and `../sites-enabled/` directories, and the `www-data` user. It does not.
+
+Sure, it can. The NGINX packages in Debian and Ubuntu repositories have changed their configurations to this for quite a while now, so serving sites whose configuration files are stored in `/sites-available/` and symlinked to `/sites-enabled/` is certainly a working setup. However it is unnecessary, and the Debian Linux family is the only one which does it. Do not force Apache configurations onto NGINX.
+
+Instead, multiple site configuration files should be stored in `/etc/nginx/conf.d/` as `example.com.conf`, If you then want to disable the site `example.com`, then rename `example.com.conf` to `example.com.conf.disabled`. Do not add `server` blocks directly to `/etc/nginx/nginx.conf` either, even if your configuration is relatively simple. This file is for configuring the server process, not individual websites.
+
+The names of configuration files placed at `conf.d` folder can be what you want but we usually call it the website name to keep it easy for you if you run several websites, but the extension must be `.conf`.
+
+The NGINX process also runs as the username `nginx` in the `nginx` group, so keep that in mind when adjusting permissions for website directories.
+
+Finally, as the [NGINX docs point out](https://www.nginx.com/resources/wiki/start/topics/examples/server_blocks/), the term Virtual Host is an Apache term, even though it’s used in the nginx.conf file supplied from the Debian and Ubuntu repositories, and some of NGINX’s old documentation. A Server Block is the NGINX equivalent, so that is the phrase you’ll see in this series on NGINX.
+
+<br>
+<br>
+
 Let's start by doing something easy and important that will get you familiar with the process of editing nginx config files.
 
 What we will do is related to security, we will disable allowing nginx to show its version in the header.
@@ -1319,8 +1338,12 @@ server {
 }
 
 server {
- server_name www.example.com xxx.xxx.xxx.xxx;
- return 301 http://example.com$request_uri;
+  listen 80;
+  listen [::]:80;
+  access_log  off;
+  error_log   off;
+  server_name www.example.com xxx.xxx.xxx.xxx;
+  return 301 http://example.com$request_uri;
 }
 ```
 
@@ -1381,6 +1404,9 @@ sudo nginx -s reload
 **First Server Block:**
 
 1. `Listen` - Is the port Nginx will listen to for incoming connections.
+
+  * `listen 80;` - Will listen for incoming IPv4 connections on port 80.
+  * `listen [::]:80;` - Will listen for incoming IPv6 connections on port 80.
 
 2. `server_name` - Your domain name without `www`.
 
@@ -1676,7 +1702,7 @@ worker_processes auto;
 
 
 
-to  be continued...
+**To Be Continued...**
 
 
 
@@ -1690,18 +1716,11 @@ to  be continued...
 ### **Enable GZip Compression**
 
 
-to  be continued...
+**To Be Continued...**
 
 
 
 
-<br>
-<br>
-
-### **Add Security tags**
-
-
-to  be continued...
 
 
 <br>
@@ -1709,7 +1728,24 @@ to  be continued...
 
 ### **Serving Static Files**
 
-to be continued...
+The directory NGINX serves sites from differs depending on how you installed it. At the time of this writing, NGINX supplied from NGINX repository `/usr/share/nginx/`.
+
+The NGINX docs warn that relying on the default location can result in the loss of site data when upgrading NGINX. You should use `/var/www/` or `/srv/`, or some other location that won’t be touched by package or system updates.
+
+This tutorial will use `/var/www/example.com/` in its examples. Replace `example.com` where you see it with the IP address or domain name of yours.
+
+1. The root directory for your site or sites should be added to the corresponding `server` block of `/etc/nginx/conf.d/example.com.conf`:
+```
+root /var/www/example.com;
+```
+
+2. Then create that directory:
+```
+mkdir -p /var/www/example.com
+```
+
+
+**To Be Continued...**
 
 
 
@@ -1718,6 +1754,7 @@ to be continued...
 
 ### **Configure HTTPS with Certbot**
 
+**To Be Continued...**
 
 One advantage of a reverse proxy is that it is easy to set up HTTPS using a TLS certificate. Certbot is a tool that allows you to quickly obtain free certificates from Let’s Encrypt. This guide will use Certbot on Ubuntu 18.04, but the[ official site](https://certbot.eff.org/) maintains comprehensive installation and usage instructions for all major distros.
 
@@ -1726,7 +1763,7 @@ Follow these steps to get a certificate via Certbot. Certbot will automatically 
 1. Install the Certbot and web server-specific packages, then run Certbot:
 ```
 sudo apt-get update
-sudo apt-get install software-properties-common
+sudo apt-get install software-properties-common openssl -y
 sudo add-apt-repository universe
 sudo add-apt-repository ppa:certbot/certbot
 sudo apt-get update
@@ -1762,16 +1799,81 @@ The Certbot packages on your system come with a cron job that will renew your ce
 ```
 sudo certbot renew --dry-run
 ```
+<br>
+<br>
+
+### **Redirect HTTP to HTTPS**
+
+```
+#this will be used for redirecting
+server {
+  listen              80;
+  listen              [::]:80;
+  server_name         example.com www.example.com;
+  return 301          https://example.com$request_uri;
+    }
+
+#main server block with HTTPS
+server {
+  listen              443 ssl http2 default_server;
+  listen              [::]:443 ssl http2 default_server;
+  server_name         example.com www.example.com;
+    }
+```
+
+Reload Nginx `sudo nginx -s reload`
+
 
 <br>
 <br>
 
 ### **Enabling HTTP /2.0 Support**
 
-to be continued...
+HTTP/2 is the successor to the HTTP/1.1 standard which, among other benefits, reduces page load times and bandwidth used. While the HTTP/2 specification applies to both HTTP and HTTP traffic, web browsers currently do not support unencrypted HTTP/2, so it can only be used with TLS.
 
 
+1. Add the `http2` option to the `listen` directive in your site configuration’s `server` block for both IPv4 and IPv6. It should look like below:
+```
+listen    443 ssl http2 default_server;
+listen    [::]:443 ssl http2 default_server;
+```
 
+2. Reload NGINX:
+```
+sudo nginx -s reload:
+```
+
+3. Verify HTTP/2 is enabled with [HTTP2.Pro](https://http2.pro/).
+
+<br>
+<br>
+
+### **Add Security Headers**
+
+As the title says, these headers will enhance the security of your website and prevent multiple attacks.
+
+We add headers to a website through the [add_header](http://nginx.org/en/docs/http/ngx_http_headers_module.html) directive.
+
+You got two options to add these headers:
+
+1. In `http` block in main nginx configuration file `/etc/nginx/nginx.conf`, doing this, these headers will be applied to all the sites you have.
+2. In a site conf file in `conf.d` folder and this will make it applicable to this site individually.
+
+_I personally go with the first option_
+
+Just copy/paste these headers below and add them to whichever location you choose from above two.
+```
+add_header X-Content-Type-Options nosniff;
+add_header X-Frame-Options SAMEORIGIN;
+add_header X-XSS-Protection "1; mode=block";
+add_header Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+```
+
+Once you've added these tags you can check using `curl -I Your-VPS-IP-or-Domain` 
+
+
+You can read about what these headers mean from [OWASP Secure Headers Project
+](https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#tab=Headers).
 
 <br>
 <br>
