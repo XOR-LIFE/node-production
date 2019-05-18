@@ -1,7 +1,7 @@
 # **Take Your NodeJS Project to The Production Environment (VPS/Dedicated Server).**
 
 
-The following instructions are based on **Ubuntu**, the steps are the same for whatever Linux distribution you are going to use but the commands might be different.
+This tutorial is based on **Ubuntu**, the steps are the same for whatever Linux distribution you are going to use but the commands might be different.
 ----------------------------------------------------------------------------------------
 
 <br>
@@ -698,7 +698,7 @@ mongo -u admin -p --authenticationDatabase admin
 
 And you will be prompted to enter your password, after login type `exit`.
 
-**Note: It is not recommended to enter your password on the command-line because it will be stored in the shell history file and can be viewed later on by an attacker.**
+**Note: It is not recommended to enter your password on the command-line because it will be stored in the shell history file and can be viewed later on by an attacker, instead, use above command and enter your password inside mongo shell.**
 
 <br>
 
@@ -1472,7 +1472,7 @@ server {
     }
 
   location /register {
-      proxy_pass http://localhost:3001;
+      proxy_pass http://localhost:3001/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection 'upgrade';
@@ -1480,7 +1480,7 @@ server {
       proxy_cache_bypass $http_upgrade;
 	
   location /blog {
-      proxy_pass http://localhost:3002;
+      proxy_pass http://localhost:3002/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection 'upgrade';
@@ -1489,7 +1489,7 @@ server {
     }
 
   location /shop {
-      proxy_pass http://localhost:3004;
+      proxy_pass http://localhost:3004/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection 'upgrade';
@@ -1520,7 +1520,7 @@ This is how to serve error pages of the 500 family
 
 Above code is to placed in the server block beneath the location section **but not inside it**.
 
-Visitors will see this page when they visit one of your proxied paths `/blog` while its currently down (node app is not active).
+Visitors will see this page when they visit one of your proxied paths `/blog` , `shop` ,etc..  while its currently down (node app is not active).
 
 You can, of course, design your custom page and replace `50x.html` with the new file name.
 
@@ -1717,6 +1717,7 @@ to be continued...
 <br>
 
 ### **Configure HTTPS with Certbot**
+
 
 One advantage of a reverse proxy is that it is easy to set up HTTPS using a TLS certificate. Certbot is a tool that allows you to quickly obtain free certificates from Let’s Encrypt. This guide will use Certbot on Ubuntu 18.04, but the[ official site](https://certbot.eff.org/) maintains comprehensive installation and usage instructions for all major distros.
 
