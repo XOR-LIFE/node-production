@@ -76,7 +76,7 @@ I've tried **All** VNC applications and I can tell you that **RealVNC** is the b
 
 RealVNC consists of two products, Server and Viewer.
 
-* RealVNC Server: Download to the remote computer you want to control (This is to be downloaded on you VPS machine).
+* RealVNC Server: Download to the remote computer you want to control (This is to be downloaded on your VPS machine).
 * RealVNC Viewer: Download to the local computer or mobile device you want to control from.
 
 <br>
@@ -976,8 +976,6 @@ Because servers such as NGINX are highly optimized (ie fast) for the task of res
 It also happens to be a lot less work to set up NGINX configuration for a certain scenario than writing everything you'd need from scratch in JavaScript. **If you're going to** scale your app you're going to need some kind of load balancer / caching proxy in front of your node servers. You could write your own load balancer / caching proxy in node but why bother when you can use a mature, battle-tested industry standard product (that is also faster) instead? 
 
 One of the major reasons to proxy node.js through Nginx is Server Blocks (a.k.a Virtual Hosts in Apache), And this is basically the feature of being able to host multiple websites (domain names) on a single server, meaning that, you don't have enough IPv4 addresses to host each one on its own dedicated IP. This is extremely useful given that you own multiple sites and don’t want to go through the lengthy (and expensive) process of setting up a new web server for each site.
-
-Further Read: [How to Create a Nginx Virtual Host (AKA Server Blocks)](https://www.keycdn.com/support/nginx-virtual-host)
 
 
 That said, there are other benefits to using a server like nginx facing the public.
