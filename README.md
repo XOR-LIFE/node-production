@@ -1504,6 +1504,7 @@ server {
       proxy_set_header Connection 'upgrade';
       proxy_set_header Host $host;
       proxy_cache_bypass $http_upgrade;
+    }
 	
   location /blog {
       proxy_pass http://localhost:3002/;
@@ -1560,7 +1561,7 @@ You can, of course, design your custom page and replace `50x.html` with the new 
 
 This error above is something that you might get and I discovered it by chance while taking a look over my error.log file.
 
-This is related to the limits imposed by Linux to set the maximum number of open files and this simply means **connections** because visitors request files from your machine, therefore, a limit of open files of 1000 means that you can only have 1000 users that can surf your site at the same time and this is something you need fix asap, so, let's fix it.
+This is related to the limits imposed by Linux to set the maximum number of open files and this simply means **connections** because visitors request files from your machine, therefore, a limit of open files of 1000 means that you can only have 1000 users that can surf your site at the same time and this is something you need to fix asap, so, let's fix it.
 
 To check for hard and soft values, run the following commands:
 ```
