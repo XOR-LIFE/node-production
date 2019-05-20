@@ -1397,7 +1397,7 @@ sudo nginx -s reload
 <br>
 
 
-* **What are these things we put in the configuration file ?!**
+* **What are these _directives_ we put in the configuration file ?!**
 
 **First Server Block:**
 
@@ -1458,6 +1458,16 @@ location / {
 
 ### **Running And Proxying Multiple Node Apps**
 
+```
+                  +--- host --------> node.js on localhost:8080
+                  |
+users --> nginx --|--- host/blog ---> node.js on localhost:8181
+                  |
+                  +--- host/mail ---> node.js on localhost:8282
+```
+
+<br>
+
 In the previous section, you've learned how to run and proxy **one** node application. But, what if you want to run multiple node applications on the same server.
 
 This also is considered a production best practice, for example, you would have your main node app which will serve the main page and it's functions and another separate app responsible for registration and another app for your blog, shop, etc..
@@ -1475,7 +1485,7 @@ This is achieved very easy, you only have to specify two things in the configura
   }
 ```
 
-This is an example of a configuration that proxies four node apps:
+This is an example of a configuration that proxies four node apps _(I ignored most of the **directives** because this is an example but in real world you need to use them)_:
 ```
 server {
   listen 80;
@@ -1953,23 +1963,37 @@ You got two options to add these headers:
 1. In `http` block in main nginx configuration file `/etc/nginx/nginx.conf`, doing this, these headers will be applied to all the sites you have.
 2. In a site conf file in `conf.d` folder and this will make it applicable to this site individually.
 
-_I personally go with the first option_
+_If you went with second option then don't use the first option and put any headers in the main `nginx.conf` file as it might cause you problems in loading headers_
 
 Just copy/paste these headers below and add them to whichever location you choose from above two.
 ```
 add_header X-Content-Type-Options nosniff;
 add_header X-Frame-Options SAMEORIGIN;
 add_header X-XSS-Protection "1; mode=block";
-add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload;" always;
 ```
 
 Once you've added these tags you can check using `curl -I Your-VPS-IP-or-Domain` 
 
+_Note: There are other headers that I ignored using as they are not necessary or require further knowledge and might affect your site negatively, these headers are `Content-Security-Policy`, `Referrer-Policy`, `Feature-Policy`_
 
-You can read about what these headers mean from [OWASP Secure Headers Project
+You can read about what all of these headers mean at [OWASP Secure Headers Project
 ](https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#tab=Headers).
 
 <br>
+<br>
+
+Online testing tools:
+ - [Mozilla Observatory](https://observatory.mozilla.org/)
+ - [SSL Labs](https://www.ssllabs.com/ssltest/)
+ - [Security Headers](https://securityheaders.com)
+
+Useful links:
+ - [Mozilla Security Guidelines](https://infosec.mozilla.org/guidelines/web_security)
+ - [Subresource Integrity](https://developer.mozilla.org/en/docs/Web/Security/Subresource_Integrity)
+ - [Content Security Policy](https://developer.mozilla.org/en/Add-ons/WebExtensions/Content_Security_Policy)
+ - [Certbot documentation](https://certbot.eff.org/docs/)
+
 <br>
 
 **Further Reading:**
