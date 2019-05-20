@@ -1753,11 +1753,17 @@ mkdir -p /var/www/example.com
 
 ### **Configure HTTPS with Certbot**
 
-**To Be Continued...**
-
 One advantage of a reverse proxy is that it is easy to set up HTTPS using a TLS certificate. Certbot is a tool that allows you to quickly obtain free certificates from Let’s Encrypt. This guide will use Certbot on Ubuntu 18.04, but the[ official site](https://certbot.eff.org/) maintains comprehensive installation and usage instructions for all major distros.
 
 Follow these steps to get a certificate via Certbot. Certbot will automatically update your NGINX configuration files to use the new certificate:
+
+Before starting you need to add the `www` subdomain to your conf file to your `server_name` directive as below so that certbot will issue a certificate for your subdomain
+```
+server_name example.com www.example.com;
+```
+
+Replace `example.com` with your domain name, **Also comment any server block used for redirection as we did above as certbot will do it.**
+
 
 1. Install the Certbot and web server-specific packages, then run Certbot:
 ```
@@ -1777,12 +1783,49 @@ Saving debug log to /var/log/letsencrypt/letsencrypt.log
 Plugins selected: Authenticator nginx, Installer nginx
 
 Which names would you like to activate HTTPS for?
--------------------------------------------------------------------------------
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 1: example.com
 2: www.example.com
--------------------------------------------------------------------------------
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Select the appropriate numbers separated by commas and/or spaces, or leave input
-blank to select all options shown (Enter 'c' to cancel):
+blank to select all options shown (Enter 'c' to cancel): 1,2
+Obtaining a new certificate
+Deploying Certificate to VirtualHost /etc/nginx/conf.d/nodeapp.conf
+Deploying Certificate to VirtualHost /etc/nginx/conf.d/nodeapp.conf
+
+Please choose whether or not to redirect HTTP traffic to HTTPS, removing HTTP access.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+1: No redirect - Make no further changes to the webserver configuration.
+2: Redirect - Make all requests redirect to secure HTTPS access. Choose this for
+new sites, or if you're confident your site works on HTTPS. You can undo this
+change by editing your web server's configuration.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Select the appropriate number [1-2] then [enter] (press 'c' to cancel): 2
+Redirecting all traffic on port 80 to ssl in /etc/nginx/conf.d/nodeapp.conf
+Redirecting all traffic on port 80 to ssl in /etc/nginx/conf.d/nodeapp.conf
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Congratulations! You have successfully enabled https://example.com and
+https://www.example.com
+
+You should test your configuration at:
+https://www.ssllabs.com/ssltest/analyze.html?d=example.com
+https://www.ssllabs.com/ssltest/analyze.html?d=www.example.com
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/example.com/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/example.com/privkey.pem
+   Your cert will expire on 2019-08-18. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot again
+   with the "certonly" option. To non-interactively renew *all* of
+   your certificates, run "certbot renew"
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
 ```
 
 3. Certbot will also ask if you would like to automatically redirect HTTP traffic to HTTPS traffic. It is recommended that you select this option.
@@ -1801,40 +1844,86 @@ sudo certbot renew --dry-run
 <br>
 <br>
 
-### **Redirect HTTP to HTTPS**
+### **Redirect VPS-IP-Address To Domain**
 
+Certbot has managed the redirection process by adding the necessary `server` blocks, but still, your website is accessed through your VPS-IP-Address.
+
+**So, let's make some small changes.**
+
+1. Redirect Your VPS-IP-Address to your domain name (open your eyes well :) )
+
+This is the configuration added by certbot to manage redirections
 ```
-#this will be used for redirecting
 server {
-  listen              80;
-  listen              [::]:80;
-  server_name         example.com www.example.com;
-  return 301          https://example.com$request_uri;
-    }
+    if ($host = www.example.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
 
-#main server block with HTTPS
-server {
-  listen              443 ssl http2 default_server;
-  listen              [::]:443 ssl http2 default_server;
-  server_name         example.com www.example.com;
-    }
+
+    if ($host = example.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+
+  listen 80;
+  listen [::]:80;
+  server_name example.com www.example.com;
+    return 404; # managed by Certbot
+
+     }
 ```
 
-Reload Nginx `sudo nginx -s reload`
+Above config will redirect http (www and non-www) domain name to https
 
+so let's add a new redirection that will redirect your VPS-IP-Address in both http and https to your domain name, and this is the full configuration along with the ones added by certbot
+```
+server {
+    if ($host = www.example.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = example.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+  listen 80;
+  listen [::]:80;
+  server_name example.com www.example.com;
+    return 404; # managed by Certbot
+
+             }
+
+# This will redirect our vps-ip-address in both http and https
+server {
+  listen 80;
+  listen [::]:80;
+  listen 443 ssl;
+  listen [::]:443 ssl;
+  server_name xxx.xxx.xxx.xxx;
+  return 301 https://example.com$request_uri;
+}
+```
+
+<br>
+
+Save configuration and check for errors `sudo nginx -t` and Reload Nginx `sudo nginx -s reload`
+
+Visit your VPS-IP-Address with both http and https to see if it's now redirected to your domain name.
 
 <br>
 <br>
 
-### **Enabling HTTP /2.0 Support**
+### **Enabling HTTP /2.0 Support And Set As Default Server**
 
 HTTP/2 is the successor to the HTTP/1.1 standard which, among other benefits, reduces page load times and bandwidth used. While the HTTP/2 specification applies to both HTTP and HTTP traffic, web browsers currently do not support unencrypted HTTP/2, so it can only be used with TLS.
 
 
-1. Add the `http2` option to the `listen` directive in your site configuration’s `server` block for both IPv4 and IPv6. It should look like below:
+1. Add the `http2` option and `default_server` to the `listen` directive in your site configuration’s `server` block for both IPv4 and IPv6. It should look like below:
 ```
+listen    [::]:443 ssl http2 default_server ipv6only=on;
 listen    443 ssl http2 default_server;
-listen    [::]:443 ssl http2 default_server;
 ```
 
 2. Reload NGINX:
