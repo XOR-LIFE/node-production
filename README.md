@@ -1841,6 +1841,12 @@ The Certbot packages on your system come with a cron job that will renew your ce
 ```
 sudo certbot renew --dry-run
 ```
+
+You can also check for existing certificates using
+```
+sudo certbot certificates
+```
+
 <br>
 <br>
 
@@ -1954,7 +1960,7 @@ Just copy/paste these headers below and add them to whichever location you choos
 add_header X-Content-Type-Options nosniff;
 add_header X-Frame-Options SAMEORIGIN;
 add_header X-XSS-Protection "1; mode=block";
-add_header Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 ```
 
 Once you've added these tags you can check using `curl -I Your-VPS-IP-or-Domain` 
