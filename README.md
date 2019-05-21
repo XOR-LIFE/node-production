@@ -1555,7 +1555,7 @@ This is how to serve error pages of the 500 family
 
 Above code is to placed in the server block beneath the location section **but not inside it**.
 
-Visitors will see this page when they visit one of your proxied paths `/blog` , `shop` ,etc..  while its currently down (node app is not active).
+Visitors will see this page when they visit one of your proxied paths `/blog` , `/shop` ,etc..  while its currently down (node app is not active).
 
 You can, of course, design your custom page and replace `50x.html` with the new file name.
 
@@ -1628,9 +1628,9 @@ worker_rlimit_nofile 100000;
 ```
 
 9. Change `worker_connections` value to 100000
-``
+```
 worker_connections  100000;
-``
+```
 
 10. Check for Nginx configuration and reload
 ```
@@ -1698,9 +1698,9 @@ Reading: 0 Writing: 5 Waiting: 38
   * Second is total handled connections. Usually, the first 2 values are the same.
   * Third value is number of and handles requests. This is usually greater than the second value.
   * Dividing third-value by second-one will give you the number of requests per connection handled by Nginx. In the above example, 10993/7368, **1.49 requests per connections**.
-* Reading – The current number of connections where Nginx is reading the request header.
-* Writing – The current number of connections where Nginx is writing the response back to the client.
-* Waiting – keep-alive connections, actually it is active – (reading + writing). This value depends on keepalive-timeout. Do not confuse non-zero waiting value for poor performance. It can be ignored. Although, you can force zero waiting by setting keepalive_timeout 0;
+* **Reading** – The current number of connections where Nginx is reading the request header.
+* **Writing** – The current number of connections where Nginx is writing the response back to the client.
+* **Waiting** – keep-alive connections, actually it is active – (reading + writing). This value depends on keepalive-timeout. Do not confuse non-zero waiting value for poor performance. It can be ignored. Although, you can force zero waiting by setting keepalive_timeout 0;
 
 <br>
 <br>
@@ -1722,7 +1722,7 @@ worker_processes auto;
 <br>
 <br>
 
-### **Enable GZip Compression**
+### **Enable Gzip Compression**
 
 
 **To Be Continued...**
@@ -1980,6 +1980,9 @@ _Note: There are other headers that I ignored using as they are not necessary or
 You can read about what all of these headers mean at [OWASP Secure Headers Project
 ](https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#tab=Headers).
 
+
+**_Note: There are many tutorials on the internet that suggest adding headers to improve SSL Certificate, and I urge you not to, as most if not ALL of these headers exit in this file `/etc/letsencrypt/options-ssl-nginx.conf` which is already included automatically in your conf file_**
+
 <br>
 <br>
 
@@ -2066,6 +2069,22 @@ _**This is a list you should check before finally saying that my website is up a
 
 * Nginx must be enabled to run on startup as mentioned in the installation section of Nginx
 
-* After making any edits to nginx conf files you should check with `sudo nginx -t` and then reload `sudo nginx -s reload`
+* After making any edits to nginx conf files you must check with `sudo nginx -t` and then reload `sudo nginx -s reload`
+
+
+
+----------------------------------------------------------------------------------------
+
+<br>
+<br>
+
+## 12- Site Performance
+----------------------------------------------------------------------------------------
+
+
+
+
+
+
 
 
