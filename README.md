@@ -1969,6 +1969,8 @@ server {
 
 <br>
 
+Replace `xxx.xxx.xxx.xxx` with your VPS-IP-Address.
+
 Save configuration and check for errors `sudo nginx -t` and Reload Nginx `sudo nginx -s reload`
 
 Visit your VPS-IP-Address with both http and https to see if it's now redirected to your domain name.
@@ -2026,7 +2028,7 @@ You can read about what all of these headers mean at [OWASP Secure Headers Proje
 ](https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#tab=Headers).
 
 
-**_Note: There are many tutorials on the internet that suggest adding headers to improve SSL Certificate, and I urge you not to, as most if not ALL of these headers exit in this file `/etc/letsencrypt/options-ssl-nginx.conf` which is already included automatically in your conf file_**
+**_Note: There are many tutorials on the internet that suggest adding headers to improve SSL Certificate, and I urge you not to, as most if not ALL of these headers exit in this file `/etc/letsencrypt/options-ssl-nginx.conf` which is already included automatically in your conf file._**
 
 <br>
 <br>
@@ -2037,6 +2039,7 @@ Online testing tools:
  - [Security Headers](https://securityheaders.com)
 
 Useful links:
+ - [Be very careful with your add_header in Nginx! You might make your site insecure](https://www.peterbe.com/plog/be-very-careful-with-your-add_header-in-nginx)
  - [Mozilla Security Guidelines](https://infosec.mozilla.org/guidelines/web_security)
  - [Subresource Integrity](https://developer.mozilla.org/en/docs/Web/Security/Subresource_Integrity)
  - [Content Security Policy](https://developer.mozilla.org/en/Add-ons/WebExtensions/Content_Security_Policy)
