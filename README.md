@@ -1159,7 +1159,7 @@ sudo systemctl enable nginx
 
 ## 7- Adjust Your Node Application for Production
 
-**This Tutorial Is Taken From [Flavio Copes Website](https://flaviocopes.com/node-difference-dev-prod/)**
+**This Tutorial Is Taken From @flaviocopes [Website](https://flaviocopes.com/node-difference-dev-prod/)**
 
 <br>
 
@@ -1707,7 +1707,45 @@ Reading: 0 Writing: 5 Waiting: 38
 
 ### **Nginx Better Configurations**
 
+Let Nginx calculate CPU cores automatically
+```
 worker_processes auto;
+```
+
+Only log critical errors (optional)
+```
+error_log /var/log/nginx/error.log crit;
+```
+
+To boost I/O on HDD we can disable access logs (optional)
+```
+access_log off;
+```
+
+If it’s mandatory to have access logging, then enable access-log buffering. This enables Nginx to buffer a series of log entries and writes them to the log file together at once instead of performing the different write operation for each single log entry.
+```
+access_log /var/log/nginx/access.log main buffer=16k
+```
+
+Copies data between one FD and other from within the kernel which is faster than read() + write()
+```
+sendfile on;
+```
+
+This parameter will allow your server to send HTTP response in one packet instead of sending it in frames. This will optimize throughout and minimize bandwidth consumption which will result in improvement of your website’s loading time.
+```
+tcp_nopush on;
+```
+
+This parameter allows you to prevent your system from buffering data-sends and all the data will be sent in small bursts in real time, it's also good for WebSocket proxying. You can set this parameter by adding the following line
+```
+tcp_nodelay on;
+```
+
+
+
+
+
 
 
 
@@ -1724,13 +1762,20 @@ worker_processes auto;
 
 ### **Enable Gzip Compression**
 
+Gzip compression is used to accelerate your site performance by archiving your site assets in gzip format before being sent to clients and then clients browsers will un-archive the files.
 
-**To Be Continued...**
+This will allow for low bandwidth but also high CPU usage as your CPU will compress files before sending.
+
+Enabling Gzip is very easy but I won't cover it in this tutorial. it only takes `gzip on;` to enable it but enabling gzip over SSL can make your website vulnerable to [BREACH attack](http://breachattack.com/) as Nginx official documentation says.
+
+Anyway here is the nginx gzip documentation and I'll leave it up to you [Module ngx_http_gzip_module](http://nginx.org/en/docs/http/ngx_http_gzip_module.html)
+
+_Choose your directives wisely_
 
 
+<br>
 
-
-
+**Take a look at the [Site Performance](https://github.com/XOR-LIFE/node-production#12--site-performance) section before deciding on gzip.**
 
 <br>
 <br>
