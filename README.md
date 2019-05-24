@@ -7,6 +7,55 @@ This tutorial is based on **Ubuntu**, the steps are the same for whatever Linux 
 <br>
 <br>
 
+## Table of Contents:
+
+* [Set up Your VPS](https://github.com/XOR-LIFE/node-production#set-up-your-vps)
+  * [Install OpenSSH](https://github.com/XOR-LIFE/node-production#install-openssh)
+  * [Enable SFTP](https://github.com/XOR-LIFE/node-production#enable-sftp)
+  * [Enable VNC](https://github.com/XOR-LIFE/node-production#enable-vnc)
+  * [Install Git](https://github.com/XOR-LIFE/node-production#install-git)
+
+* [1- Install NodeJS and NPM](https://github.com/XOR-LIFE/node-production#1--install-nodejs-and-npm)
+  * [Uninstall NodeJS and NPM](https://github.com/XOR-LIFE/node-production#uninstall-nodejs-and-npm)
+
+* [2- Create a Node App With Express Server (Testing)](https://github.com/XOR-LIFE/node-production#2--create-a-node-app-with-express-server-testing)
+
+* [3- Install PM2](https://github.com/XOR-LIFE/node-production#3--install-pm2)
+  * [How to:-](https://github.com/XOR-LIFE/node-production#how-to-)
+* [4- Install and Configure MongoDB](https://github.com/XOR-LIFE/node-production#4--install-and-configure-mongodb)
+  * [Add Admin User For The First Time](https://github.com/XOR-LIFE/node-production#add-admin-user-for-the-first-time)
+  * [Mongodb Configuration File](https://github.com/XOR-LIFE/node-production#mongodb-configuration-file)
+  * [Enable MongoDB authentication](https://github.com/XOR-LIFE/node-production#enable-mongodb-authentication)
+  * [Change MongoDB Default Port](https://github.com/XOR-LIFE/node-production#change-mongodb-default-port)
+  * [Securing MongoDB from Injection Attacks](https://github.com/XOR-LIFE/node-production#securing-mongodb-from-injection-attacks)
+  * [Uninstall MongoDB](https://github.com/XOR-LIFE/node-production#uninstall-mongodb)
+* [5- Configure UFW and Add MongoDB Port to Rules](https://github.com/XOR-LIFE/node-production#5--configure-ufw-and-add-mongodb-port-to-rules)
+  * [Allow External Access To MongoDB](https://github.com/XOR-LIFE/node-production#allow-external-access-to-mongodb)
+* [6- Install Nginx](https://github.com/XOR-LIFE/node-production#6--install-nginx)
+* [7- Adjust Your Node Application for Production](https://github.com/XOR-LIFE/node-production#7--adjust-your-node-application-for-production)
+* [8- Configure NGINX](https://github.com/XOR-LIFE/node-production#8--configure-nginx)
+  * [Configuration Notes](https://github.com/XOR-LIFE/node-production#configuration-notes)
+  * [Hide Nginx Server Version](https://github.com/XOR-LIFE/node-production#hide-nginx-server-version)
+  * [Setup NGINX As Reverse Proxy For Node Application](https://github.com/XOR-LIFE/node-production#setup-nginx-as-reverse-proxy-for-node-application)
+  * [Running And Proxying Multiple Node Apps](https://github.com/XOR-LIFE/node-production#running-and-proxying-multiple-node-apps)
+  * [Serving Error Pages](https://github.com/XOR-LIFE/node-production#serving-error-pages)
+  * [Modifying Open File/Concurrent Connections Limit](https://github.com/XOR-LIFE/node-production#modifying-open-fileconcurrent-connections-limit)
+  * [Enable Nginx Status Page](https://github.com/XOR-LIFE/node-production#enable-nginx-status-page)
+  * [Nginx Better Configurations](https://github.com/XOR-LIFE/node-production#nginx-better-configurations)
+  * [Enable Gzip Compression](https://github.com/XOR-LIFE/node-production#enable-gzip-compression)
+  * [Serving Static Files](https://github.com/XOR-LIFE/node-production#serving-static-files)
+  * [Configure HTTPS with Certbot](https://github.com/XOR-LIFE/node-production#configure-https-with-certbot)
+  * [Redirect VPS-IP-Address To Domain](https://github.com/XOR-LIFE/node-production#redirect-vps-ip-address-to-domain)
+  * [Enabling HTTP /2.0 Support And Set As Default Server](https://github.com/XOR-LIFE/node-production#enabling-http-20-support-and-set-as-default-server)
+  * [Add Security Headers](https://github.com/XOR-LIFE/node-production#add-security-headers)
+* [9- Canonical Livepatch](https://github.com/XOR-LIFE/node-production#9--canonical-livepatch)
+* [10- Useful Readings](https://github.com/XOR-LIFE/node-production#10--useful-readings)
+* [11- Checklist](https://github.com/XOR-LIFE/node-production#11--checklist)
+* [12- Site Performance](https://github.com/XOR-LIFE/node-production#12--site-performance)
+
+<br>
+<br>
+
 ## Set up Your VPS
 ----------------------------------------------------------------------------------------
 
@@ -1298,7 +1347,7 @@ sudo nginx -s reload
 <br>
 <br>
 
-### **Setup NGINX As Reverse Proxy For Node Application**
+### **Setup NGINX As Reverse Proxy For Node Application:**
 
 This is what we've been waiting to do with nginx, which is to configure it as a reverse proxy for our node application/s.
 
@@ -1462,7 +1511,7 @@ location / {
 <br>
 <br>
 
-### **Running And Proxying Multiple Node Apps**
+### **Running And Proxying Multiple Node Apps:**
 
 ```
                   +--- host --------> node.js on localhost:8080
@@ -1549,7 +1598,7 @@ server {
 <br>
 <br>
 
-### **Serving Error Pages**
+### **Serving Error Pages:**
 
 This is how to serve error pages of the 500 family
 ```
@@ -1569,7 +1618,7 @@ You can, of course, design your custom page and replace `50x.html` with the new 
 <br>
 
 
-### **Modifying Open File/Concurrent Connections Limit**
+### **Modifying Open File/Concurrent Connections Limit:**
 
 **`failed (24: Too many open files)`**
 
@@ -1653,7 +1702,7 @@ ulimit -Sn
 <br>
 <br>
 
-### **Enable Nginx Status Page**
+### **Enable Nginx Status Page:**
 
 Nginx has status page to give you information about Nginx’s server health including Active connections and other data. You can use this info to fine tune your server.
  
@@ -1711,7 +1760,7 @@ Reading: 0 Writing: 5 Waiting: 38
 <br>
 <br>
 
-### **Nginx Better Configurations**
+### **Nginx Better Configurations:**
 
 Let Nginx calculate CPU cores automatically
 ```
@@ -1730,7 +1779,7 @@ access_log off;
 
 If it’s mandatory to have access logging, then enable access-log buffering. This enables Nginx to buffer a series of log entries and writes them to the log file together at once instead of performing the different write operation for each single log entry.
 ```
-access_log /var/log/nginx/access.log main buffer=16k
+access_log /var/log/nginx/access.log main buffer=16k
 ```
 
 Copies data between one FD and other from within the kernel which is faster than read() + write()
@@ -1748,25 +1797,10 @@ This parameter allows you to prevent your system from buffering data-sends and a
 tcp_nodelay on;
 ```
 
-
-
-
-
-
-
-
-**To Be Continued...**
-
-
-
-
-
-
-
 <br>
 <br>
 
-### **Enable Gzip Compression**
+### **Enable Gzip Compression:**
 
 Gzip compression is used to accelerate your site performance by archiving your site assets in gzip format before being sent to clients and then clients browsers will un-archive the files.
 
@@ -1786,7 +1820,7 @@ _Choose your directives wisely_
 <br>
 <br>
 
-### **Serving Static Files**
+### **Serving Static Files:**
 
 The directory NGINX serves sites from differs depending on how you installed it. At the time of this writing, NGINX supplied from NGINX repository `/usr/share/nginx/`.
 
@@ -1812,7 +1846,7 @@ mkdir -p /var/www/example.com
 <br>
 <br>
 
-### **Configure HTTPS with Certbot**
+### **Configure HTTPS with Certbot:**
 
 One advantage of a reverse proxy is that it is easy to set up HTTPS using a TLS certificate. Certbot is a tool that allows you to quickly obtain free certificates from Let’s Encrypt. This guide will use Certbot on Ubuntu 18.04, but the[ official site](https://certbot.eff.org/) maintains comprehensive installation and usage instructions for all major distros.
 
@@ -1911,7 +1945,7 @@ sudo certbot certificates
 <br>
 <br>
 
-### **Redirect VPS-IP-Address To Domain**
+### **Redirect VPS-IP-Address To Domain:**
 
 Certbot has managed the redirection process by adding the necessary `server` blocks, but still, your website is accessed through your VPS-IP-Address.
 
@@ -1984,7 +2018,7 @@ Visit your VPS-IP-Address with both http and https to see if it's now redirected
 <br>
 <br>
 
-### **Enabling HTTP /2.0 Support And Set As Default Server**
+### **Enabling HTTP /2.0 Support And Set As Default Server:**
 
 HTTP/2 is the successor to the HTTP/1.1 standard which, among other benefits, reduces page load times and bandwidth used. While the HTTP/2 specification applies to both HTTP and HTTP traffic, web browsers currently do not support unencrypted HTTP/2, so it can only be used with TLS.
 
@@ -2005,7 +2039,7 @@ sudo nginx -s reload:
 <br>
 <br>
 
-### **Add Security Headers**
+### **Add Security Headers:**
 
 As the title says, these headers will enhance the security of your website and prevent multiple attacks.
 
