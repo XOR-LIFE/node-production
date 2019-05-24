@@ -735,7 +735,7 @@ sudo lsof -n -P | grep LISTEN
 
 <br>
 
-* **Securing MongoDB from Injection Attacks:**
+#### **Securing MongoDB from Injection Attacks:**
 
 All of the following MongoDB operations permit you to run arbitrary JavaScript expressions directly on the server:
 
@@ -881,7 +881,7 @@ sudo ufw deny 111
 
 <br>
 
-* **Allow External Access To MongoDB**
+### **Allow External Access To MongoDB**
  
 Right now we have configured UFW to allow external access to our machine with Mongo port, but still, Mongo itself isn't configured for external access. even though the default port is open, the database server is currently listening on 127.0.0.1. And to permit remote connections, you must include a publicly-routed IP address for your server to `mongo.conf` file.
 
@@ -1209,6 +1209,12 @@ app.configure('production', () => {
 })
 ```
 
+**Further Reading:**
+
+1. [PM2 Runtime | Best Practices | Environment Variables](https://pm2.io/doc/en/runtime/best-practices/environment-variables/)
+
+
+
 ----------------------------------------------------------------------------------------
 
 <br>
@@ -1304,7 +1310,7 @@ This is what we've been waiting to do with nginx, which is to configure it as a 
 sudo nano /etc/nginx/conf.d/nodeapp.conf
 ```
 
-_**Note: Don't ever use the tab key to make indentation in configuration files and always use the space key to make spaces**_
+_**Note: Don't ever use the tab key to make indentation in configuration files and always use the space key to make spaces.**_
 
 
 3. Copy the following and paste it in the newly created file:
