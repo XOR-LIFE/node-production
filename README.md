@@ -600,7 +600,7 @@ sudo systemctl disable mongod
 
 <br>
 
-* **Add Admin User For The First Time:**
+#### **Add Admin User For The First Time:**
 
 1. Open MongoDB shell:
 ```
@@ -637,7 +637,7 @@ exit
 
 <br>
 
-* **Mongodb Configuration File:**
+#### **Mongodb Configuration File:**
 
 The configuration file for MongoDB is located at` /etc/mongod.conf`, and is written in **YAML** format. Most of the settings are well commented within the file. Here are some outlined default options below:
 
@@ -658,7 +658,7 @@ For more information on how to customize these and other values in your configur
 
 <br>
 
-* **Enable MongoDB authentication:**
+#### **Enable MongoDB authentication:**
 
 1. Edit the mongodb service file `/etc/mongod.conf` with your editor.
 
@@ -702,7 +702,7 @@ And you will be prompted to enter your password, after login type `exit`.
 
 <br>
 
-* **Change MongoDB Default Port:**
+#### **Change MongoDB Default Port:**
 
 This is an optional thing to do, if you intend, You can specify mongod’s listening port by specifying it in the mongodb configuration file.
 
