@@ -52,6 +52,7 @@ This tutorial is based on **Ubuntu**, the steps are the same for whatever Linux 
 * [10- Useful Readings](https://github.com/XOR-LIFE/node-production#10--useful-readings)
 * [11- Checklist](https://github.com/XOR-LIFE/node-production#11--checklist)
 * [12- Site Performance](https://github.com/XOR-LIFE/node-production#12--site-performance)
+* [13- Securing VPS](https://github.com/XOR-LIFE/node-production#13--securing-vps)
 
 <br>
 <br>
@@ -2169,7 +2170,67 @@ _**This is a list you should check before finally saying that my website is up a
 ## 12- Site Performance
 ----------------------------------------------------------------------------------------
 
+This section is to help you as a front-end developer to improve the performance of your site, thus, decreasing your website load time and decrease your bandwidth.
 
+* Use CDN for your Javascript libraries:
+  * Most, if not all javascript libraries have a CDN, but if you can't seem to find it then use [cdnjs](https://cdnjs.com/)
+
+* Use HTTP/2:
+  * I've already covered that in Nginx
+
+* Validate HTML:
+  * [Validator.nu HTML5 Validator](https://html5.validator.nu/)
+  * [W3 HTML Validation Service](https://validator.w3.org/#validate_by_input)
+  * [FreeFormatter HTML Validator](https://www.freeformatter.com/html-validator.html)
+  * [W3 Link Checker](https://validator.w3.org/checklink)
+
+* Validate CSS:
+  * [W3 CSS Validation Service](http://jigsaw.w3.org/css-validator/)
+  * [CSSPortal CSS Validator](https://www.cssportal.com/css-validator/)
+  * [CSS LINT](http://csslint.net/)
+  * [CodeBeautify CSS Validator](https://codebeautify.org/cssvalidate)
+
+* Validate Javascript (NOT NODE.JS):
+  * [JSHint](https://jshint.com/)
+  * [BeautifyTools Javascript Validator](http://beautifytools.com/javascript-validator.php)
+  * [CodeBeautify JavaScript Validator](https://codebeautify.org/jsvalidate)
+
+<br>
+<br>
+
+* Minify HTML (use any of them):
+  * [MinifyCode HTML minifier](http://minifycode.com/html-minifier/)
+  * [WillPeavy HTML Minifier](https://www.willpeavy.com/minifier/)
+
+* Minify CSS (use any of them):
+  * [CSSMinifier](https://cssminifier.com/)
+  * [Minifier](https://www.minifier.org/)
+  * [CSS Compressor](https://csscompressor.com/)
+
+* Compress Images (Compress your images without losing quality)
+  * Search Google "Compress Images", _a lot of online sites and they all are good_
+  * [JPEGMini](https://www.jpegmini.com/) ,I use this tool personally, it's the best ever in the industry, you can find it cracked, but if you have the money I really urge you to buy it to support the developers and keep it maintained.
+
+<br>
+<br>
+
+* Test Your Site:
+  * [PageSpeed](https://developers.google.com/speed/pagespeed/insights/)
+  * [Lighthouse](https://chrome.google.com/webstore/detail/lighthouse/blipmdconlkpinefehnmjammfjpmpbjk)
+  * [GTmetrix](https://gtmetrix.com/)
+  * [dareboost](https://www.dareboost.com/en)
+  * [Pingdom Website Speed Test](https://tools.pingdom.com/)
+  * [Website Speed Test](https://tools.keycdn.com/speed)
+  * [Web Performance Test](https://tools.keycdn.com/performance)
+  * [GEEKFLARE Toolbox](https://tools.geekflare.com/tools/)
+
+----------------------------------------------------------------------------------------
+
+<br>
+<br>
+
+## 13- Securing VPS
+----------------------------------------------------------------------------------------
 
 
 
