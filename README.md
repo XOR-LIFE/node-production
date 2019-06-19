@@ -1281,7 +1281,7 @@ Above work was only child play :smiley:  , This is the part that you really need
 
 As the use of the NGINX web server has grown, NGINX, Inc. has worked to distance NGINX from configurations and terminology that were used in the past when trying to ease adoption for people already accustomed to Apache.
 
-If you’re familiar with Apache, you’ll know that multiple site configurations (called Virtual Hosts in Apache terminology) are stored at `/etc/apache/sites-available/`, which symlink to files in `/etc/apache/sites-enabled/`. However, many guides and blog posts for NGINX recommend this same configuration. As you could expect, this has led to some confusion, and the assumption that NGINX regularly uses the `../sites-available/` and `../sites-enabled/` directories, and the `www-data` user. It does not.
+If you’re familiar with Apache, you’ll know that multiple site configurations (called Virtual Hosts in Apache terminology) are stored at `/etc/apache/sites-available/`, which symlink to files in `/etc/apache/sites-enabled/`. However, many guides and blog posts for NGINX recommend this same configuration. As you could expect, this has led to some confusion, and the assumption that NGINX regularly uses the `../sites-available/` and `../sites-enabled/` directories, and the `www-data` user. **It does not.**
 
 Sure, it can. The NGINX packages in Debian and Ubuntu repositories have changed their configurations to this for quite a while now, so serving sites whose configuration files are stored in `/sites-available/` and symlinked to `/sites-enabled/` is certainly a working setup. However it is unnecessary, and the Debian Linux family is the only one which does it. Do not force Apache configurations onto NGINX.
 
@@ -1291,7 +1291,7 @@ The names of configuration files placed at `conf.d` folder can be what you want 
 
 The NGINX process also runs as the username `nginx` in the `nginx` group, so keep that in mind when adjusting permissions for website directories.
 
-Finally, as the [NGINX docs point out](https://www.nginx.com/resources/wiki/start/topics/examples/server_blocks/), the term Virtual Host is an Apache term, even though it’s used in the nginx.conf file supplied from the Debian and Ubuntu repositories, and some of NGINX’s old documentation. A Server Block is the NGINX equivalent, so that is the phrase you’ll see in this series on NGINX.
+Finally, as the [NGINX docs point out](https://www.nginx.com/resources/wiki/start/topics/examples/server_blocks/), the term _Virtual Host_ is an Apache term, even though it’s used in the nginx.conf file supplied from the Debian and Ubuntu repositories, and some of NGINX’s old documentation. A _Server Block_ is the NGINX equivalent, so, that is the phrase you’ll see in this series on NGINX.
 
 <br>
 <br>
@@ -1334,7 +1334,7 @@ To disable this, you need to turn off the server_tokens directive in `/etc/nginx
 ```
 sudo nano /etc/nginx/nginx.conf
 ```
-3. Add the following line `server_tokens off;` to the `http` section shown in the screenshot below.
+3. Add the following line `server_tokens off;` to the `http` block shown in the screenshot below.
 
 ![](https://i.ibb.co/ryg3wSL/server-tokens.jpg)
 
@@ -1952,7 +1952,7 @@ Certbot has managed the redirection process by adding the necessary `server` blo
 
 **So, let's make some small changes.**
 
-1. Redirect Your VPS-IP-Address to your domain name (open your eyes well :) )
+1. Redirect Your VPS-IP-Address to your domain name (open your eyes well :heart_eyes: )
 
 This is the configuration added by certbot to manage redirections
 ```
@@ -2058,7 +2058,7 @@ Just copy/paste these headers below and add them to whichever location you choos
 add_header X-Content-Type-Options nosniff;
 add_header X-Frame-Options SAMEORIGIN;
 add_header X-XSS-Protection "1; mode=block";
-add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload;" always;
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 ```
 
 Once you've added these tags you can check using `curl -I Your-VPS-IP-or-Domain` 
@@ -2069,7 +2069,7 @@ You can read about what all of these headers mean at [OWASP Secure Headers Proje
 ](https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#tab=Headers).
 
 
-**_Note: There are many tutorials on the internet that suggest adding headers to improve SSL Certificate, and I urge you not to, as most if not ALL of these headers exit in this file `/etc/letsencrypt/options-ssl-nginx.conf` which is already included automatically in your conf file._**
+**_Note: There are many tutorials on the internet that suggest adding headers to improve SSL Certificate, and I urge you not to, as most if not ALL of these headers exist in this file `/etc/letsencrypt/options-ssl-nginx.conf` which is already included automatically by Certbot in your conf file._**
 
 <br>
 <br>
@@ -2170,7 +2170,7 @@ _**This is a list you should check before finally saying that my website is up a
 ## 12- Site Performance
 ----------------------------------------------------------------------------------------
 
-This section is to help you as a front-end developer to improve the performance of your site, thus, decreasing your website load time and decrease your bandwidth.
+This section is to help you as a front-end developer to improve the performance of your site, thus, decreasing your website load time and decreasing your bandwidth.
 
 * Use CDN for your Javascript libraries:
   * Most, if not all javascript libraries have a CDN, but if you can't seem to find it then use [cdnjs](https://cdnjs.com/)
