@@ -2127,6 +2127,7 @@ Activate at: **[Canonical Livepatch](https://ubuntu.com/livepatch)**
 * **[Node File Paths](https://flaviocopes.com/node-file-paths/)**
 * **[Working with folders in Node](https://flaviocopes.com/node-folders/)**
 * **[Error handling in Node.js](https://flaviocopes.com/node-exceptions/)**
+* **[Impress your colleagues with these NPM tricks](https://dev.to/borrellidev/impress-your-colleagues-with-these-npm-tricks-3fcb/)**
 
 ----------------------------------------------------------------------------------------
 
