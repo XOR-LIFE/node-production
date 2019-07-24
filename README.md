@@ -143,7 +143,7 @@ https://manage.realvnc.com/en/
 https://www.realvnc.com/en/connect/download/vnc/linux/
 ```
 
-3. `cd` to the folder which RealVNC was download, It's Downloads in my case
+3. `cd` to the folder which RealVNC was download, It's `Downloads` in my case
 ```
 cd Downloads
 ```
@@ -2208,6 +2208,12 @@ This section is to help you as a front-end developer to improve the performance 
   * [Minifier](https://www.minifier.org/)
   * [CSS Compressor](https://csscompressor.com/)
 
+* Minify JavaScript (NOT NODE.JS):
+  * [UglifyJS 3](https://github.com/mishoo/UglifyJS2)
+  * [JSCompress](https://jscompress.com/)
+  * [JavaScript Minifier](https://javascript-minifier.com/)
+
+
 * Compress Images (Compress your images without losing quality)
   * Search Google "Compress Images", _a lot of online sites and they all are good_
   * [JPEGMini](https://www.jpegmini.com/) ,I use this tool personally, it's the best ever in the industry, you can find it cracked, but if you have the money I really urge you to buy it to support the developers and keep it maintained.
@@ -2224,7 +2230,8 @@ This section is to help you as a front-end developer to improve the performance 
   * [Website Speed Test](https://tools.keycdn.com/speed)
   * [Web Performance Test](https://tools.keycdn.com/performance)
   * [GEEKFLARE Toolbox](https://tools.geekflare.com/tools/)
-
+  * [WebPageTest](http://webpagetest.org)
+  
 ----------------------------------------------------------------------------------------
 
 <br>
