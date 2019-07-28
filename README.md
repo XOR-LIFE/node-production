@@ -84,7 +84,7 @@ sudo systemctl enable ssh
 sudo systemctl start ssh
 ```
 
-You can now connect to your machine through SSH using, for example [PuTTY](www.putty.org).
+You can now connect to your machine through SSH using, for example [PuTTY](https://www.putty.org)
 
 <br>
 
@@ -902,26 +902,6 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 5900 (v6)                  ALLOW       Anywhere (v6)
 ```
 
-8. Allow access to the default MongoDB port `27017`:
-```
-sudo ufw allow 27017
-```
-
-9. Check UFW status:
-```
-sudo ufw status
-```
-
-which returns
-```
-To                         Action      From
---                         ------      ----
-OpenSSH                    ALLOW       Anywhere
-27017                      ALLOW       Anywhere
-OpenSSH (v6)               ALLOW       Anywhere (v6)
-27017 (v6)                 ALLOW       Anywhere (v6)
-```
-
 <br>
 
 **If you to deny traffic on a certain port (in this example, 111) you would only have to run:**
@@ -943,12 +923,32 @@ _**Note: You only allow external access of mongo if your node application is on 
 
 <br>
 
-1. Allow remote connections, to bind MongoDB to all network interfaces open the config file `/etc/mongod.conf`:
+1. Allow access to the default MongoDB port `27017`:
+```
+sudo ufw allow 27017
+```
+
+2. Check UFW status:
+```
+sudo ufw status
+```
+
+which returns
+```
+To                         Action      From
+--                         ------      ----
+OpenSSH                    ALLOW       Anywhere
+27017                      ALLOW       Anywhere
+OpenSSH (v6)               ALLOW       Anywhere (v6)
+27017 (v6)                 ALLOW       Anywhere (v6)
+```
+
+3. Allow remote connections, to bind MongoDB to all network interfaces open the config file `/etc/mongod.conf`:
 ```
 sudo nano /etc/mongod.conf
 ```
 
-2. Edit `bindIP:` in `net:` section with setting below:
+4. Edit `bindIP:` in `net:` section with setting below:
 ```
 net:
   port: 27017
@@ -959,12 +959,12 @@ A comma should be placed before adding the IP address you want to allow. Once th
 
 More on bindIp; [MongoDB bindIp Configurations](https://docs.mongodb.com/manual/reference/configuration-options/#net.bindIp)
 
-3. Restart mongodb:
+5. Restart mongodb:
 ```
 sudo service mongod restart
 ```
 
-4. Bind to all (Step 2 Alternative):
+6. Bind to all (Step 2 Alternative):
 
 If you still can't access externally your database, consider bind to all (I don't recommend it unless you have problems connecting).
 
@@ -1623,7 +1623,7 @@ You can, of course, design your custom page and replace `50x.html` with the new 
 
 **`failed (24: Too many open files)`**
 
-This error above is something that you might get and I discovered it by chance while taking a look over my error.log file.
+This error above is something that you might get and I discovered it by chance while taking a look over my `error.log` file.
 
 This is related to the limits imposed by Linux to set the maximum number of open files and this simply means **connections** because visitors request files from your machine, therefore, a limit of open files of 1000 means that you can only have 1000 users that can surf your site at the same time and this is something you need to fix asap, so, let's fix it.
 
