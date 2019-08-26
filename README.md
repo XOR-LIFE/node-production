@@ -547,7 +547,6 @@ This tutorial installs MongoDB 4.x Community Edition on LTS Ubuntu Linux systems
 **Platform Support:**
 MongoDB only provides packages for the following 64-bit LTS (long-term support) Ubuntu releases:
 
-* 14.04 LTS (trusty)
 * 16.04 LTS (xenial)
 * 18.04 LTS (bionic)
 
@@ -568,7 +567,7 @@ Alright Then, Let's start:
 
 1. Import the public key used by the package management system:
 ```
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
 ```
 
 2. Create a list file for MongoDB:
@@ -577,17 +576,12 @@ If you are unsure of what Ubuntu version you are running, open a terminal or she
 
 * For Ubuntu 18.04 (Bionic):
 ```
-echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
 ```
 
 * For Ubuntu 16.04 (Xenial)
 ```
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
-```
-
-* For Ubuntu 14.04 (Trusty):
-```
-echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
 ```
 
 3. Reload local package database:
@@ -2240,8 +2234,7 @@ This section is to help you as a front-end developer to improve the performance 
 ## 13- Securing VPS
 ----------------------------------------------------------------------------------------
 
-
-
+### **Instal Fail2Ban**
 
 
 
