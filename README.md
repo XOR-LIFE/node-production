@@ -12,9 +12,9 @@ This tutorial is based on **Ubuntu**, the steps are the same for whatever Linux 
 * [Set up Your VPS](https://github.com/XOR-LIFE/node-production#set-up-your-vps)
   * [Install OpenSSH](https://github.com/XOR-LIFE/node-production#install-openssh)
   * [Enable SFTP](https://github.com/XOR-LIFE/node-production#enable-sftp)
-  * [Enable VNC](https://github.com/XOR-LIFE/node-production#enable-vnc)
+  * [Install VNC](https://github.com/XOR-LIFE/node-production#enable-vnc)
   * [Install Git](https://github.com/XOR-LIFE/node-production#install-git)
-
+ 
 * [1- Install NodeJS and NPM](https://github.com/XOR-LIFE/node-production#1--install-nodejs-and-npm)
   * [Uninstall NodeJS and NPM](https://github.com/XOR-LIFE/node-production#uninstall-nodejs-and-npm)
 
@@ -112,7 +112,7 @@ Download from here: [Bitvise SSH Client Download](https://www.bitvise.com/ssh-cl
 
 <br>
 
-### **Enable VNC**
+### **Install VNC**
 
 Even though this is not necessary if you are going to interact with your machine through commands all the time (SSH), but you might need to connect to your machine through VNC for any reason and access the GUI version due to simplicity.
 
@@ -1550,7 +1550,7 @@ server {
       proxy_pass http://localhost:3000/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection 'upgrade';
+      proxy_set_header Connection "upgrade";
       proxy_set_header Host $host;
       proxy_cache_bypass $http_upgrade;
     }
@@ -1559,7 +1559,7 @@ server {
       proxy_pass http://localhost:3001/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection 'upgrade';
+      proxy_set_header Connection "upgrade";
       proxy_set_header Host $host;
       proxy_cache_bypass $http_upgrade;
     }
@@ -1568,7 +1568,7 @@ server {
       proxy_pass http://localhost:3002/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection 'upgrade';
+      proxy_set_header Connection "upgrade";
       proxy_set_header Host $host;
       proxy_cache_bypass $http_upgrade;
     }
@@ -1577,7 +1577,7 @@ server {
       proxy_pass http://localhost:3004/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection 'upgrade';
+      proxy_set_header Connection "upgrade";
       proxy_set_header Host $host;
       proxy_cache_bypass $http_upgrade;
     }
@@ -2015,7 +2015,7 @@ Visit your VPS-IP-Address with both http and https to see if it's now redirected
 
 ### **Enabling HTTP /2.0 Support And Set As Default Server:**
 
-HTTP/2 is the successor to the HTTP/1.1 standard which, among other benefits, reduces page load times and bandwidth used. While the HTTP/2 specification applies to both HTTP and HTTP traffic, web browsers currently do not support unencrypted HTTP/2, so it can only be used with TLS.
+HTTP/2 is the successor to the HTTP/1.1 standard which, among other benefits, reduces page load times and bandwidth used. While the HTTP/2 specification applies to both HTTP and HTTPS traffic, web browsers currently do not support unencrypted HTTP/2, so it can only be used with TLS.
 
 
 1. Add the `http2` option and `default_server` to the `listen` directive in your site configuration’s `server` block for both IPv4 and IPv6. It should look like below:
@@ -2168,7 +2168,7 @@ _**This is a list you should check before finally saying that my website is up a
 This section is to help you as a front-end developer to improve the performance of your site, thus, decreasing your website load time and decreasing your bandwidth.
 
 * Use CDN for your Javascript libraries:
-  * Most, if not all javascript libraries have a CDN, but if you can't seem to find it then use [cdnjs](https://cdnjs.com/)
+  * Most, if not all of the javascript libraries have a CDN, but if you can't seem to find it then use [cdnjs](https://cdnjs.com/)
 
 * Use HTTP/2:
   * I've already covered that in Nginx
@@ -2234,7 +2234,7 @@ This section is to help you as a front-end developer to improve the performance 
 ## 13- Securing VPS
 ----------------------------------------------------------------------------------------
 
-### **Instal Fail2Ban**
+### **Install Fail2Ban**
 
 
 
