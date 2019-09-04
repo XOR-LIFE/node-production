@@ -12,7 +12,7 @@ This tutorial is based on **Ubuntu**, the steps are the same for whatever Linux 
 * [Set up Your VPS](https://github.com/XOR-LIFE/node-production#set-up-your-vps)
   * [Install OpenSSH](https://github.com/XOR-LIFE/node-production#install-openssh)
   * [Enable SFTP](https://github.com/XOR-LIFE/node-production#enable-sftp)
-  * [Install VNC](https://github.com/XOR-LIFE/node-production#enable-vnc)
+  * [Install VNC](https://github.com/XOR-LIFE/node-production#install-vnc)
   * [Install Git](https://github.com/XOR-LIFE/node-production#install-git)
  
 * [1- Install NodeJS and NPM](https://github.com/XOR-LIFE/node-production#1--install-nodejs-and-npm)
