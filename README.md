@@ -191,7 +191,7 @@ sudo add-apt-repository ppa:git-core/ppa
 ```
 sudo apt update
 
-sudo apt install git
+sudo apt install git  -y
 ```
 
 3. Validate installation and check for version
@@ -1093,7 +1093,7 @@ sudo apt-get remove nginx-common
 
 sudo apt update
 
-sudo apt install nginx
+sudo apt install nginx  -y
 ```
 
 6. Print NGINX version, compiler version, and configure script parameters:
