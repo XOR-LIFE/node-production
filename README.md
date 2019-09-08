@@ -1727,8 +1727,7 @@ We simply created a new location at `nginx_status` and you can change it to what
 
 4. Check for configurations and reload
 ```
-sudo nginx -t
-sudo nginx -s reload
+sudo nginx -t && sudo nginx -s reload
 ```
 
 5. Go to `127.0.0.1/nginx_status` or `curl 127.0.0.1/nginx_status` and you should see an output like this
@@ -1756,6 +1755,11 @@ Reading: 0 Writing: 5 Waiting: 38
 <br>
 
 ### **Nginx Better Configurations:**
+
+First, open nginx main conf file
+```
+sudo nano /etc/nginx/nginx.conf
+```
 
 Let Nginx calculate CPU cores automatically
 ```
@@ -1862,7 +1866,7 @@ sudo apt-get install software-properties-common openssl -y
 sudo add-apt-repository universe
 sudo add-apt-repository ppa:certbot/certbot
 sudo apt-get update
-sudo apt-get install certbot python-certbot-nginx
+sudo apt-get install certbot python-certbot-nginx  -y
 ```
 
 2. Certbot will ask for information about the site. The responses will be saved as part of the certificate:
@@ -1940,6 +1944,27 @@ sudo certbot certificates
 <br>
 <br>
 
+### **Enabling HTTP /2.0 Support And Set As Default Server:**
+
+HTTP/2 is the successor to the HTTP/1.1 standard which, among other benefits, reduces page load times and bandwidth used. While the HTTP/2 specification applies to both HTTP and HTTPS traffic, web browsers currently do not support unencrypted HTTP/2, so it can only be used with TLS.
+
+
+1. Add the `http2` option and `default_server` to the `listen` directive in your site configuration’s `server` block for both IPv4 and IPv6. It should look like below:
+```
+listen    [::]:443 ssl http2 default_server ipv6only=on;
+listen    443 ssl http2 default_server;
+```
+
+2. Reload NGINX:
+```
+sudo nginx -s reload:
+```
+
+3. Verify HTTP/2 is enabled with [HTTP2.Pro](https://http2.pro/).
+
+<br>
+<br>
+
 ### **Redirect VPS-IP-Address To Domain:**
 
 Certbot has managed the redirection process by adding the necessary `server` blocks, but still, your website is accessed through your VPS-IP-Address.
@@ -2013,27 +2038,6 @@ Visit your VPS-IP-Address with both http and https to see if it's now redirected
 <br>
 <br>
 
-### **Enabling HTTP /2.0 Support And Set As Default Server:**
-
-HTTP/2 is the successor to the HTTP/1.1 standard which, among other benefits, reduces page load times and bandwidth used. While the HTTP/2 specification applies to both HTTP and HTTPS traffic, web browsers currently do not support unencrypted HTTP/2, so it can only be used with TLS.
-
-
-1. Add the `http2` option and `default_server` to the `listen` directive in your site configuration’s `server` block for both IPv4 and IPv6. It should look like below:
-```
-listen    [::]:443 ssl http2 default_server ipv6only=on;
-listen    443 ssl http2 default_server;
-```
-
-2. Reload NGINX:
-```
-sudo nginx -s reload:
-```
-
-3. Verify HTTP/2 is enabled with [HTTP2.Pro](https://http2.pro/).
-
-<br>
-<br>
-
 ### **Add Security Headers:**
 
 As the title says, these headers will enhance the security of your website and prevent multiple attacks.
@@ -2054,6 +2058,12 @@ add_header X-Frame-Options SAMEORIGIN;
 add_header X-XSS-Protection "1; mode=block";
 add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 ```
+
+Check for configurations and reload
+```
+sudo nginx -t && sudo nginx -s reload
+```
+
 
 Once you've added these tags you can check using `curl -I Your-VPS-IP-or-Domain` 
 
