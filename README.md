@@ -1255,8 +1255,14 @@ Setting the environment to **production** generally ensures that:
 * Makes express cache view templates.
 * Makes express cache CSS files generated from CSS extensions.
 * Makes express generate less verbose error messages.
+* Middleware and other dependencies switch to use efficient code path
+* Only packages in **dependencies** are installed. Dependencies in **devDependencies** and **peerDependencies** are ignored.
 
-For example Pug, the templating library used by Express, compiles in debug mode if **NODE_ENV** is not set to **production**. Express views are compiled in every request in development mode, while in production they are cached. There are many more examples.
+<br>
+
+For example Pug, the templating library used by Express, compiles in debug mode if **NODE_ENV** is not set to **production**. Express views are compiled in every request in development mode, while in production they are cached. There are many more examples that I don’t list here. As you can see, setting NODE_ENV to **production** gives the best performance. As this variable is so important and has become globally adopted in Node.js world, you should burn this **“always setting NODE_ENV to production”** into your mind.
+
+<br>
 
 Express provides configuration hooks specific to the environment, which are automatically called based on the NODE_ENV variable value:
 ```
