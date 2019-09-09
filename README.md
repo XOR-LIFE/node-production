@@ -1717,7 +1717,7 @@ worker_rlimit_nofile 100000;
 worker_connections  100000;
 ```
 
-10. Check for Nginx configuration and reload
+10. Check Nginx configuration and reload
 ```
 sudo nginx -t && sudo nginx -s reload
 ```
@@ -1760,7 +1760,7 @@ sudo nano /etc/nginx/conf.d/nodeapp.conf
 
 We simply created a new location at `nginx_status` and you can change it to what you want, the `stub_status on;` is what resposible to turn on nginx stats.
 
-4. Check for configurations and reload
+4. Check configurations and reload
 ```
 sudo nginx -t && sudo nginx -s reload
 ```
@@ -1964,9 +1964,9 @@ listen    [::]:443 ssl http2 default_server ipv6only=on;
 listen    443 ssl http2 default_server;
 ```
 
-2. Reload NGINX:
+2. Check Nginx configuration and reload
 ```
-sudo nginx -s reload:
+sudo nginx -t && sudo nginx -s reload
 ```
 
 3. Verify HTTP/2 is enabled with [HTTP2.Pro](https://http2.pro/).
@@ -2068,7 +2068,7 @@ add_header X-XSS-Protection "1; mode=block";
 add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 ```
 
-Check for configurations and reload
+Check configurations and reload
 ```
 sudo nginx -t && sudo nginx -s reload
 ```
