@@ -43,10 +43,9 @@ This tutorial is based on **Ubuntu**, the steps are the same for whatever Linux 
   * [Enable Nginx Status Page](https://github.com/XOR-LIFE/node-production#enable-nginx-status-page)
   * [Nginx Better Configurations](https://github.com/XOR-LIFE/node-production#nginx-better-configurations)
   * [Enable Gzip Compression](https://github.com/XOR-LIFE/node-production#enable-gzip-compression)
-  * [Serving Static Files](https://github.com/XOR-LIFE/node-production#serving-static-files)
   * [Configure HTTPS with Certbot](https://github.com/XOR-LIFE/node-production#configure-https-with-certbot)
-  * [Redirect VPS-IP-Address To Domain](https://github.com/XOR-LIFE/node-production#redirect-vps-ip-address-to-domain)
   * [Enabling HTTP /2.0 Support And Set As Default Server](https://github.com/XOR-LIFE/node-production#enabling-http-20-support-and-set-as-default-server)
+  * [Redirect VPS-IP-Address To Domain](https://github.com/XOR-LIFE/node-production#redirect-vps-ip-address-to-domain)
   * [Add Security Headers](https://github.com/XOR-LIFE/node-production#add-security-headers)
 * [9- Canonical Livepatch](https://github.com/XOR-LIFE/node-production#9--canonical-livepatch)
 * [10- Useful Readings](https://github.com/XOR-LIFE/node-production#10--useful-readings)
@@ -1215,7 +1214,10 @@ This is usually done by executing the command
 ```
 export NODE_ENV=production
 ```
-in the shell, but it’s better to put it in your shell configuration file (e.g.**` .bash_profile`** with the Bash shell) because otherwise the setting does not persist in case of a system restart.
+
+This will make any node app runs in production, but after a machine restart, it will be reverted to development again.
+
+<br>
 
 You can also apply the environment variable by prepending it to your application initialization command:
 ```
@@ -1223,10 +1225,36 @@ NODE_ENV=production node app.js
 ```
 This environment variable is a convention that is widely used in external libraries as well.
 
-Setting the environment to **production** generally ensures that
+<br>
 
-* logging is kept to a minimum, essential level
-* more caching levels take place to optimize performance
+To make NODE_ENV permanently set to production in Ubuntu and i personally do this, we can set a system-wide environment variable in the `/etc/environment` file:
+```
+sudo nano /etc/environment
+```
+
+Append the following at the end of the file:
+```
+NODE_ENV=production
+```
+
+**now reboot your machine** and check
+```
+printenv | grep NODE_ENV
+```
+
+and you should get `NODE_ENV=production` if you did everything right.
+
+Node can make a simple scan on your application and warn you if there is anything in your code not suitable for production just run you app `node index.js`
+
+<br>
+
+Setting the environment to **production** generally ensures that:
+
+* Logging is kept to a minimum, essential level.
+* More caching levels take place to optimize performance.
+* Makes express cache view templates.
+* Makes express cache CSS files generated from CSS extensions.
+* Makes express generate less verbose error messages.
 
 For example Pug, the templating library used by Express, compiles in debug mode if **NODE_ENV** is not set to **production**. Express views are compiled in every request in development mode, while in production they are cached. There are many more examples.
 
@@ -1253,11 +1281,12 @@ app.configure('production', () => {
 })
 ```
 
-**Further Reading:**
+**A Must Read**
 
-1. [PM2 Runtime | Best Practices | Environment Variables](https://pm2.io/doc/en/runtime/best-practices/environment-variables/)
+1. [The largest Node.js best practices for production](https://github.com/goldbergyoni/nodebestpractices#5-going-to-production-practices)
 
-
+<br>
+_BTW, The whole list is a must-read to any developer_
 
 ----------------------------------------------------------------------------------------
 
@@ -1815,32 +1844,6 @@ _Choose your directives wisely_
 <br>
 
 **Take a look at the [Site Performance](https://github.com/XOR-LIFE/node-production#12--site-performance) section before deciding on gzip.**
-
-<br>
-<br>
-
-### **Serving Static Files:**
-
-The directory NGINX serves sites from differs depending on how you installed it. At the time of this writing, NGINX supplied from NGINX repository `/usr/share/nginx/`.
-
-The NGINX docs warn that relying on the default location can result in the loss of site data when upgrading NGINX. You should use `/var/www/` or `/srv/`, or some other location that won’t be touched by package or system updates.
-
-This tutorial will use `/var/www/example.com/` in its examples. Replace `example.com` where you see it with the IP address or domain name of yours.
-
-1. The root directory for your site or sites should be added to the corresponding `server` block of `/etc/nginx/conf.d/example.com.conf`:
-```
-root /var/www/example.com;
-```
-
-2. Then create that directory:
-```
-mkdir -p /var/www/example.com
-```
-
-
-**To Be Continued...**
-
-
 
 <br>
 <br>
