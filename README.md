@@ -1202,7 +1202,7 @@ sudo systemctl enable nginx
 
 ## 7- Adjust Your Node Application for Production
 
-**This Tutorial Is Taken From @flaviocopes [Website](https://flaviocopes.com/node-difference-dev-prod/)**
+**This Tutorial Is Taken From @flaviocopes [Website](https://flaviocopes.com/node-difference-dev-prod/)** with extra edits by me.
 
 <br>
 
@@ -1210,12 +1210,12 @@ You can have different configurations for production and development environment
 
 Node assumes it’s always running in a development environment. You can signal Node.js that you are running in production by setting the **`NODE_ENV=production`** environment variable.
 
-This is usually done by executing the command
+This is usually done by executing this command in terminal
 ```
 export NODE_ENV=production
 ```
 
-This will make any node app runs in production, but after a machine restart, it will be reverted to development again.
+This will make any node app run in production mode, but after a machine restart, it will be reverted to development again.
 
 <br>
 
@@ -1289,10 +1289,7 @@ app.configure('production', () => {
 
 **A Must Read**
 
-1. [The largest Node.js best practices for production](https://github.com/goldbergyoni/nodebestpractices#5-going-to-production-practices)
-
-<br>
-_BTW, The whole list is a must-read to any developer_
+1. [The largest Node.js best practices](https://github.com/goldbergyoni/nodebestpractices)
 
 ----------------------------------------------------------------------------------------
 
@@ -1884,6 +1881,24 @@ sudo apt-get install certbot python-certbot-nginx  -y
 
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
 Plugins selected: Authenticator nginx, Installer nginx
+Enter email address (used for urgent renewal and security notices) (Enter 'c' to
+cancel): youremail@gmail.com
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please read the Terms of Service at
+https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf. You must
+agree in order to register with the ACME server at
+https://acme-v02.api.letsencrypt.org/directory
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(A)gree/(C)ancel: a
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Would you be willing to share your email address with the Electronic Frontier
+Foundation, a founding partner of the Let's Encrypt project and the non-profit
+organization that develops Certbot? We'd like to send you email about our work
+encrypting the web, EFF news, campaigns, and ways to support digital freedom.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(Y)es/(N)o: n
 
 Which names would you like to activate HTTPS for?
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1891,8 +1906,13 @@ Which names would you like to activate HTTPS for?
 2: www.example.com
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Select the appropriate numbers separated by commas and/or spaces, or leave input
-blank to select all options shown (Enter 'c' to cancel): 1,2
+blank to select all options shown (Enter 'c' to cancel): 
 Obtaining a new certificate
+Performing the following challenges:
+http-01 challenge for example.com
+http-01 challenge for www.example.com
+Waiting for verification...
+Cleaning up challenges
 Deploying Certificate to VirtualHost /etc/nginx/conf.d/nodeapp.conf
 Deploying Certificate to VirtualHost /etc/nginx/conf.d/nodeapp.conf
 
@@ -1921,10 +1941,15 @@ IMPORTANT NOTES:
    /etc/letsencrypt/live/example.com/fullchain.pem
    Your key file has been saved at:
    /etc/letsencrypt/live/example.com/privkey.pem
-   Your cert will expire on 2019-08-18. To obtain a new or tweaked
+   Your cert will expire on 2019-12-06. To obtain a new or tweaked
    version of this certificate in the future, simply run certbot again
    with the "certonly" option. To non-interactively renew *all* of
    your certificates, run "certbot renew"
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
  - If you like Certbot, please consider supporting our work by:
 
    Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
@@ -1969,7 +1994,7 @@ listen    443 ssl http2 default_server;
 sudo nginx -t && sudo nginx -s reload
 ```
 
-3. Verify HTTP/2 is enabled with [HTTP2.Pro](https://http2.pro/).
+3. Verify HTTP/2 is enabled with [HTTP2.Pro](https://tools.keycdn.com/http2-test).
 
 <br>
 <br>
