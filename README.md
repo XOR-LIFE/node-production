@@ -52,7 +52,7 @@ This tutorial is based on **Ubuntu**, the steps are the same for whatever Linux 
 * [11- Checklist](https://github.com/XOR-LIFE/node-production#11--checklist)
 * [12- Site Performance](https://github.com/XOR-LIFE/node-production#12--site-performance)
 * [13- Securing VPS](https://github.com/XOR-LIFE/node-production#13--securing-vps)
-
+  * [Disable Password Authentication For SSH and Enable Public Key](https://github.com/XOR-LIFE/node-production#disable-password-authentication-for-ssh-and-enable-public-key)
 <br>
 <br>
 
