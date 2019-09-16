@@ -306,7 +306,7 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 ```
 node index.js
 ```
-Then, load http://localhost:3000/ in a browser to see the output.
+Then, load http://127.0.0.1:3000/ in a browser to see the output.
 
 You can of course now navigate to your http://VPS-IP-Address:3000 from an outside machine and you would see the **'Hello World!'** message, The example above is actually a working server, but we are just making sure we are making the right footsteps.
 
@@ -1403,7 +1403,7 @@ server {
   error_log /var/log/nginx/nodeapp-error.log;
 
   location / {
-      proxy_pass http://localhost:3000/;
+      proxy_pass http://127.0.0.1:3000/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
@@ -1441,7 +1441,7 @@ server {
   error_log /var/log/nginx/nodeapp-error.log;
 
   location / {
-      proxy_pass http://localhost:3000/;
+      proxy_pass http://127.0.0.1:3000/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
@@ -1494,7 +1494,7 @@ sudo nginx -s reload
 
 4. `error_log` - Defines the path for your site error log, you can set to off by `error_log off;`.
 
-5. **`proxy_pass` - This directive is what makes this configuration a reverse proxy. It specifies that all requests which match the location block (in this case the root `/` path) should be forwarded to port `3000` on `localhost`, where the Node.js app is running.**
+5. **`proxy_pass` - This directive is what makes this configuration a reverse proxy. It specifies that all requests which match the location block (in this case the root `/` path) should be forwarded to port `3000` on `127.0.0.1`, where the Node.js app is running.**
 
 6. `proxy_http_version 1.1` - Defines the HTTP protocol version for proxying, by default it is set to 1.0. For Websockets and keepalive connections you need to use the version 1.1.
 
@@ -1530,7 +1530,7 @@ More complex apps may need additional directives. For example, Node.js is often 
 1. Add the line `proxy_buffering off;` to the config file beneath `proxy_pass` inside location section
 ```
 location / {
-      proxy_pass http://localhost:3000/;
+      proxy_pass http://127.0.0.1:3000/;
       proxy_buffering off;
 }
 ```
@@ -1541,11 +1541,11 @@ location / {
 ### **Running And Proxying Multiple Node Apps:**
 
 ```
-                  +--- host --------> node.js on localhost:8080
+                  +--- host --------> node.js on 127.0.0.1:8080
                   |
-users --> nginx --|--- host/blog ---> node.js on localhost:8181
+users --> nginx --|--- host/blog ---> node.js on 127.0.0.1:8181
                   |
-                  +--- host/mail ---> node.js on localhost:8282
+                  +--- host/mail ---> node.js on 127.0.0.1:8282
 ```
 
 <br>
@@ -1563,7 +1563,7 @@ This would allow you as a node developer to debug and dissect the code of each t
 This is achieved very easy, you only have to specify two things in the configuration file which is the `loaction` and `proxy_pass`.
 ```
   location /register {
-      proxy_pass http://localhost:3001/;
+      proxy_pass http://127.0.0.1:3001/;
   }
 ```
 
@@ -1579,7 +1579,7 @@ server {
   error_log /var/log/nginx/nodeapp-error.log;
 
   location / {
-      proxy_pass http://localhost:3000/;
+      proxy_pass http://127.0.0.1:3000/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
@@ -1588,7 +1588,7 @@ server {
     }
 
   location /register {
-      proxy_pass http://localhost:3001/;
+      proxy_pass http://127.0.0.1:3001/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
@@ -1597,7 +1597,7 @@ server {
     }
 	
   location /blog {
-      proxy_pass http://localhost:3002/;
+      proxy_pass http://127.0.0.1:3002/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
@@ -1606,7 +1606,7 @@ server {
     }
 
   location /shop {
-      proxy_pass http://localhost:3004/;
+      proxy_pass http://127.0.0.1:3004/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
@@ -1750,7 +1750,7 @@ sudo nano /etc/nginx/conf.d/nodeapp.conf
    location /nginx_status {
       stub_status on;
       access_log   off;
-      allow 127.0.0.1;   #only allow requests from localhost
+      allow 127.0.0.1;   #only allow requests from 127.0.0.1
       deny all;   #deny all other hosts
     }
 ```
@@ -1973,6 +1973,17 @@ sudo certbot renew --dry-run
 You can also check for existing certificates using
 ```
 sudo certbot certificates
+```
+
+* **Add `proxy_ssl_server_name` directive**
+
+I've been getting an error in my error log related to SSL, and i found the solution is to add the `proxy_ssl_server_name` directive in the `location` block.
+
+This will enable passing the server name through [TLS Server Name Indication extension](http://en.wikipedia.org/wiki/Server_Name_Indication) when establishing a connection with the proxied HTTPS server.
+
+How-to ? Simply add this directive beneath the `proxy_pass` directive in the `location` block.
+```
+proxy_ssl_server_name on;
 ```
 
 <br>
@@ -2278,7 +2289,124 @@ This section is to help you as a front-end developer to improve the performance 
 ## 13- Securing VPS
 ----------------------------------------------------------------------------------------
 
-### **Install Fail2Ban**
+### Disable Password Authentication For SSH and Enable Public Key
+
+Let's now agree that there are two ways for someone to hack your site, the first one depends on your node application if it has any security flaws and the other one is your machine, so if someone had access to your ubuntu machine, he now has access to everything.
+
+It's simple for anyone to obtain your VPS-IP-ADDRESS, simply go to `cmd` or `terminal` and type `ping your-site.com` and you will get the IP.
+
+Now, what a hacker would do next is to try to brute-force ssh credentials of your machine.
+
+The normal solution for this is to install "Fail2Ban" which will block IP addresses trying to authenticate after a number of invalid attempts.
+
+But this isn't the perfect solution, the perfect solution would be to disable password authentication, that way the brute-force attack would be worthless.
+
+The alternative to password authentication is [public-key authentication](https://en.wikipedia.org/wiki/Key_authentication#Authentication_using_Public_Key_Cryptography), in which you generate and store on your computer a pair of cryptographic keys and then configure your server to recognize and accept your keys, this more secure than password authentication, as it provides much stronger identity checking. An entity must possess both the **private key** and the **correct passphrase** to authenticate.
+
+
+Using key-based authentication offers a range of benefits:
+
+* Key-based login is not a major target for brute-force hacking attacks.
+* A malicious user must obtain both the private key and the corresponding passphrase to pose as a legitimate user.
+* SSH keys can be up to 4096 bits in length, making them long, complex, and difficult to brute-force hack. These keys are typically at least 1024 bits long, which is the security equivalent of a password that is at least 12 characters.
+* If a server that uses SSH keys is compromised by a hacker, no authorization credentials are at risk of being exposed.
+
+<br>
+<br>
+
+Now, Let's start:
+
+1. Open PuTTY installation folder.
+```
+C:\Program Files (x86)\PuTTY
+```
+It might be different than me if you choose otherwise while installing
+
+2. Open `puttygen.exe`
+
+3. By default `RSA` is chosen, keep it that way (preferred).
+
+4. Increase the RSA key size from `2048` bits `4096` and click Generate.
+
+5. PuTTY uses the random input from your mouse to generate a unique key. Once key generation begins, keep moving your mouse until the progress bar is filled.
+
+6. **When finished, PuTTY will display the new public key. Right-click on it and select `Select All`, then copy the public key into a Notepad file.**
+
+![](https://i.ibb.co/5s8q0pJ/1.png)
+
+7. Save the public key as a `.txt` file or some other plaintext format. **This is important**–a rich text format such as `.rtf `or `.doc` can add extra formatting characters and then your private key won’t work.
+
+8. If copy/pasting goes well, your whole public key **should be on one line.**
+
+9. In PuTTY Key Generator, enter a passphrase for the private key in the Key passphrase and Confirm passphrase text fields.
+
+10. Click **Save private key**. Choose a file name and location in Explorer while keeping the `ppk` file extension. If you plan to create multiple key pairs for different servers, be sure to give them different names so that you don’t overwrite old keys with new.
+
+11. Once you’re logged in to the remote server, configure it to authenticate with your SSH key pair instead of a user’s password. Create an `.ssh` directory in your home directory on your Linode, create a blank `authorized_keys` file inside, and set their access permissions.
+```
+mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys
+chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
+```
+
+12. Open the `authorized_keys` file with the text editor of your choice (`nano`, for example). Then, paste the contents of your public key that you copied in step seven.
+
+13. Open `/etc/ssh/sshd_config` in your preferred text editor.
+```
+sudo nano /etc/ssh/sshd_config
+```
+
+14. Find these lines and edit them to be as follow  (uncomment and/or change values)
+```
+PubkeyAuthentication yes
+```
+
+```
+AuthorizedKeysFile	.ssh/authorized_keys .ssh/authorized_keys2
+```
+
+```
+PasswordAuthentication no
+```
+
+```
+UsePAM yes
+```
+
+14. Restart ssh service `sudo service ssh restart`
+
+15. If you did everything right, Now try to authenticate to your machine again through ssh and you will get an error.
+
+<br>
+<br>
+
+How to connect to your machine?
+
+1. Open PuTTY installation folder.
+```
+C:\Program Files (x86)\PuTTY
+```
+
+2. Open `pageant.exe`
+
+3. It's now opened in tray menu, right-click and choose `View Keys`
+
+4. Click `Add Key` and choose your private key file and enter your password when prompted.
+
+5. Now open PuTTY and authenticate and you would be authenticated if you did everything right.
+
+
+<br>
+<br>
+
+Now every time you try to connect to your machine you will need to open `pageant.exe` and then add your key and enter the password and then open PuTTY and authenticate
+
+This is a lengthy process, this is why I suggest using [Bitvise SSH Client Download](https://www.bitvise.com/ssh-client-download) instead of the old PuTTY.
+
+Bitvise SSH Client Download is a modern SSH/SFTP client, the in-app `Client key manager` it had, allows generating Public-key in an easy way and different formats and storing them without the need to use extra applications.
+
+
+
+
 
 
 
