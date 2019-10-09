@@ -7,12 +7,17 @@ This tutorial is based on **Ubuntu**, the steps are the same for whatever Linux 
 <br>
 <br>
 
+** What Ubuntu distro should i use ?
+- You should use 'Ubuntu Server' on your VPS, its designed for that purpose.
+
+<br>
+<br>
+
 ## Table of Contents:
 
 * [Set up Your VPS](https://github.com/XOR-LIFE/node-production#set-up-your-vps)
   * [Install OpenSSH](https://github.com/XOR-LIFE/node-production#install-openssh)
   * [Enable SFTP](https://github.com/XOR-LIFE/node-production#enable-sftp)
-  * [Install VNC](https://github.com/XOR-LIFE/node-production#install-vnc)
   * [Install Git](https://github.com/XOR-LIFE/node-production#install-git)
  
 * [1- Install NodeJS and NPM](https://github.com/XOR-LIFE/node-production#1--install-nodejs-and-npm)
@@ -108,72 +113,6 @@ Download from here: [FileZilla Client Download](https://filezilla-project.org/do
 * **Bitvise SSH Client (Windows Only):** Free and flexible SSH Client for Windows includes state of the art terminal emulation, graphical as well as command-line SFTP support, an FTP-to-SFTP bridge, powerful tunneling features including dynamic port forwarding through an integrated proxy, and remote administration for our SSH Server.
 
 Download from here: [Bitvise SSH Client Download](https://www.bitvise.com/ssh-client-download)
-
-<br>
-
-### **Install VNC**
-
-Even though this is not necessary if you are going to interact with your machine through commands all the time (SSH), but you might need to connect to your machine through VNC for any reason and access the GUI version due to simplicity.
-
-If you installed **Ubuntu Server** on your machine then having VNC is _Useless_, unless you are going to install a GUI/Desktop on your Ubuntu Server. And if you want so then I suggest going with [Lubuntu Core Server Desktop](https://linuxconfig.org/install-gui-on-ubuntu-server-18-04-bionic-beaver#h7-2-lubuntu-core-server-desktop)
-
-<br>
-
-**Which VNC application is better ??**
-
-I've tried **All** VNC applications and I can tell you that **RealVNC** is the best VNC application with no doubt.
-
-RealVNC consists of two products, Server and Viewer.
-
-* RealVNC Server: Download to the remote computer you want to control (This is to be downloaded on your VPS machine).
-* RealVNC Viewer: Download to the local computer or mobile device you want to control from.
-
-<br>
-
-**Now,** Let's start installing RealVNC.
-
-1. Register a free account of RealVNC from the link below
-```
-https://manage.realvnc.com/en/
-```
-
-2. Download VNC Server from the link below and choose `DEB x64`
-```
-https://www.realvnc.com/en/connect/download/vnc/linux/
-```
-
-3. `cd` to the folder which RealVNC was download, It's `Downloads` in my case
-```
-cd Downloads
-```
-
-4. Install .deb package using `sudo dpkg –i`
-```
-sudo dpkg –i packagename.deb
-
-sudo apt-get install -f
-```
-
-5. Run subscription wizard so you could log in with your home subscription account
-```
-vnclicensewiz
-```
-This will launch the wizard and you just need to log in with your RealVNC credentials. You will also need root password when requested.
-
-6. Start RealVNC and Enable it on boot
-```
-sudo systemctl start vncserver-x11-serviced
-
-sudo systemctl enable vncserver-x11-serviced
-```
-**Installation is now finished.**
-
-* You can now install RealVNC Viewer from the wide list of supported devices on your controller machine to access and controll your machine.
-```
-https://www.realvnc.com/en/connect/download/viewer/
-```
-
-**If you had the error "Cannot currently show the desktop", then click this link to know how to fix it. [Disable Wayland and enable Xorg display](https://linuxconfig.org/how-to-disable-wayland-and-enable-xorg-display-server-on-ubuntu-18-04-bionic-beaver-linux)**
 
 <br>
 
@@ -457,6 +396,8 @@ pm2 save
 # Remove Startup Script
 pm2 unstartup
 ```
+
+**NOTE 1 : When upgrading to newer Node.js version, update the PM2 startup script! Use `pm2 unstartup` first then `pm2 startup` again**
 
 [More about Startup Hooks](https://pm2.io/doc/en/runtime/guide/startup-hook/)   **MUST READ**
 
@@ -2365,11 +2306,31 @@ AuthorizedKeysFile	.ssh/authorized_keys .ssh/authorized_keys2
 ```
 
 ```
+ChallengeResponseAuthentication no
+```
+
+```
+PermitEmptyPasswords no
+```
+
+```
 PasswordAuthentication no
 ```
 
 ```
-UsePAM yes
+HostbasedAuthentication no
+```
+
+```
+IgnoreUserKnownHosts yes
+```
+
+```
+IgnoreRhosts yes
+```
+
+```
+UsePAM no
 ```
 
 14. Restart ssh service `sudo service ssh restart`
