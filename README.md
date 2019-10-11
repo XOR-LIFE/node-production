@@ -7,8 +7,8 @@ This tutorial is based on **Ubuntu**, the steps are the same for whatever Linux 
 <br>
 <br>
 
-** What Ubuntu distro should i use ?
-- You should use 'Ubuntu Server' on your VPS, its designed for that purpose.
+**What Ubuntu distro should i use ?**
+- You should use **Ubuntu Server** on your VPS, its designed for that purpose.
 
 <br>
 <br>
@@ -1020,7 +1020,7 @@ echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \ | sudo tee
 echo "deb http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx" \ | sudo tee /etc/apt/sources.list.d/nginx.list
 ```
 
-**I Personally go with the stable version, Also Nginx recommends the stable version for production.**
+**I Personally go with the Mainline version.**
 
 3. Import official nginx signing key so apt could verify the packages authenticity:
 ```
