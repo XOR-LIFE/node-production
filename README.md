@@ -174,14 +174,14 @@ sudo apt install gcc g++ make build-essential curl -y
 
 3. Install node.js and npm from NodeSource Repository:
 ```
-curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 
 sudo apt update
 
 sudo apt-get install -y nodejs
 ```
 
-Above command will install node.js version 12, if you want a previous version just replace 12 with desired node version e.g. (11, 10, 8)
+Above command will install node.js version 13, if you want a previous version just replace 13 with desired node version e.g. (12, 10, 8)
 
 to check both node.js and npm versions, simply use.
 ```
@@ -1201,7 +1201,7 @@ Setting the environment to **production** generally ensures that:
 
 <br>
 
-For example Pug, the templating library used by Express, compiles in debug mode if **NODE_ENV** is not set to **production**. Express views are compiled in every request in development mode, while in production they are cached. There are many more examples that I don’t list here. As you can see, setting NODE_ENV to **production** gives the best performance. As this variable is so important and has become globally adopted in Node.js world, you should burn this **“always setting NODE_ENV to production”** into your mind.
+For example Pug, the templating library used by Express, compiles in debug mode if **NODE_ENV** is not set to **production**. Express views are compiled in every request in development mode, while in production they are cached. There are many more examples that I don’t list here. As you can see, setting NODE_ENV to **production** gives the best performance. As this variable is so important and has become globally adopted in Node.js world, you should burn this **“always set NODE_ENV to production”** into your mind.
 
 <br>
 
