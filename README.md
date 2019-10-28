@@ -71,7 +71,7 @@ Before we begin you need to make sure that you have an SSH connection so you can
 ```
 sudo apt update
 
-sudo apt install openssh-server -y
+sudo apt install ssh -y
 ```
 
 Once the installation is completed, the SSH service will start automatically, type the following command to show the SSH server status
@@ -805,17 +805,12 @@ sudo ufw allow http
 sudo ufw allow https
 ```
 
-5. If you use VNC to connect to your machine, make sure to also open its corresponding port (Its 5900 in my case, I use RealVNC):
-```
-sudo ufw allow 5900
-```
-
-6. Enable UFW, because it's probably inactive:
+5. Enable UFW, because it's probably inactive:
 ```
 sudo ufw enable
 ```
 
-7. Rerun the UFW status command:
+6. Rerun the UFW status command:
 ```
 sudo ufw status
 ```
@@ -1621,13 +1616,13 @@ sudo nano /etc/security/limits.conf
 nginx soft     nofile         1000000   
 nginx hard     nofile         1000000
 * soft     nproc          1000000    
-* hard     nproc          100000   
-* soft     nofile         100000   
-* hard     nofile         100000
-root soft     nproc          100000    
-root hard     nproc          100000   
-root soft     nofile         100000   
-root hard     nofile         100000
+* hard     nproc          1000000   
+* soft     nofile         1000000   
+* hard     nofile         1000000
+root soft     nproc          1000000    
+root hard     nproc          1000000   
+root soft     nofile         1000000   
+root hard     nofile         1000000
 ```
 
 5. Reload the changes:
@@ -1637,7 +1632,7 @@ sudo sysctl -p
 
 6. set limit through ulimit
 ```
-ulimit -n 100000
+ulimit -n 1000000
 ```
 
 7. Remove restriction by nginx, open main conf file
@@ -1647,7 +1642,7 @@ sudo nano /etc/nginx/nginx.conf
 
 8. Add `worker_rlimit_nofile` Option in nginx conf right beneath `worker_processes` variable:
 ```
-worker_rlimit_nofile 100000;
+worker_rlimit_nofile 1000000;
 ```
 
 9. Change `worker_connections` value to 100000
