@@ -268,8 +268,6 @@ Additionally, PM2 is more than that. It's capable of running several node apps a
 ```
 sudo npm install -g pm2
 
-pm2 completion install
-
 pm2 -v
 ```
 
